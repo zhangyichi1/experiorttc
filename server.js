@@ -6,9 +6,11 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const passport = require('passport');
+const admin = require('firebase-admin');
 
 const user = require('./app_server/model/user');
 const config = require('./app_server/config/database');
+const serviceAccount = require('./app_server/config/privateKey.json');
 
 const routes = require('./app_server/routes/index');
 
@@ -41,10 +43,15 @@ server.use(bodyParser.urlencoded({ extended: true }));
 server.use(express.static(path.join(__dirname, 'public')));
 
 //set up passport
-server.use(passport.initialize());
-server.use(passport.session());
-
-require('./app_server/config/passport')(passport);
+// server.use(passport.initialize());
+// server.use(passport.session());
+//
+// require('./app_server/config/passport').jwtStrategy(passport);
+//
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+//   databaseURL: config.firebaseDBUrl
+// });
 
 //set up api routes
 server.use('/api', routes);

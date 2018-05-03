@@ -8,7 +8,8 @@ router.post('/signup', routeCtrl.signUp);
 
 router.post('/signin', routeCtrl.signIn);
 
-router.get('/profile', passport.authenticate('jwt', {session:false}), routeCtrl.authenticate);
+// router.get('/profile', passport.authenticate('jwt', {session:false}), routeCtrl.authenticate);
+router.get('/profile', routeCtrl.authenticate);
 
 
 module.exports = router;

@@ -88,5 +88,9 @@ module.exports.signIn = function(req, res) {
 };
 
 module.exports.authenticate = function(req, res) {
-  res.json({ user: req.user });
+  // res.json({ user: req.user });
+  res.json({ user: {
+    email: 'temp@temp.com',
+    username: 'temp'
+  }});
 }
