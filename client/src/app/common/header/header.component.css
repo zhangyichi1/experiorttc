@@ -1,0 +1,44 @@
+a {
+  font-size: 1.3em;
+  color: #b3b3b3;
+  text-decoration: none;
+}
+
+a.active {
+  color: white;
+}
+
+a:hover {
+  color: #d9d9d9;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  background-color: #343a40;
+  min-width: 8em;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.dropdown-item {
+  padding-left: .75em;
+  padding-right: 0;
+  color: #b3b3b3;
+}
+
+.dropdown-item:hover {
+  background-color: inherit;
+  color: #d9d9d9;
+}
+
+.dropdown-item.active {
+  background-color: inherit;
+  color: white;
+}
+
+.navbar-dark .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5);
+}

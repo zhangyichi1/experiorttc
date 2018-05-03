@@ -1,0 +1,31 @@
+<div class="container authForm">
+  <div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+      <fieldset class="authField">
+        <legend align="center">Sign Up</legend>
+        <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="email">Email: </label>
+            <input id="email"class="form-control authInput" type="email"
+            formControlName="email">
+          </div>
+          <div class="form-group">
+            <label for="text">Username: </label>
+            <input id="username"class="form-control authInput" type="text"
+            formControlName="username">
+          </div>
+          <div class="form-group">
+            <label for="password">Password: </label>
+            <input id="password"class="form-control authInput" type="password"
+            formControlName="password">
+          </div>
+          <br>
+          <button class="btn btn-outline-primary btn-block" type="submit">
+            Sign Up
+          </button>
+        </form>
+      </fieldset>
+    </div>
+  </div>
+</div>

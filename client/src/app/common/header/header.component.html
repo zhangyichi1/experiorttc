@@ -1,0 +1,41 @@
+<header>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <a class="navbar-brand" [routerLink]="['/home']">ExperiorTTC</a>
+    <button class="navbar-toggler hidden-sm-up" type="button" (click)="isNavbarCollapsed = !isNavbarCollapsed" data-target="#navbarsDefault" aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarsDefault">
+      <ul class="nav navbar-nav mr-auto">
+        <li class="nav-item" (click)="isNavbarCollapsed = true">
+          <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="['/home']"><i class="fa fa-home fa-fw"></i>Home</a>
+        </li>
+        <li class="nav-item" (click)="isNavbarCollapsed = true">
+          <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="['/about']">About</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <!-- <li class="nav-item" *ngIf="!isSignedIn"> -->
+        <li class="nav-item" *ngIf="!isSignedIn" (click)="isNavbarCollapsed = true">
+          <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="['/authentication/signin']">Sign In</a>
+        </li>
+        <!-- <li class="nav-item" *ngIf="!isSignedIn"> -->
+        <li class="nav-item" *ngIf="!isSignedIn" (click)="isNavbarCollapsed = true">
+          <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="['/authentication/signup']">Sign Up</a>
+        </li>
+
+        <!-- <li ngbDropdown placement="bottom-right" class="nav-item" *ngIf="isSignedIn"> -->
+        <li ngbDropdown placement="bottom-right" class="nav-item" *ngIf="isSignedIn">
+          <a id="userDropdown" class="nav-link pointer" ngbDropdownToggle>{{ user.username }}</a>
+          <ul ngbDropdownMenu aria-labelledby="userDropdown">
+            <li class="dropdown-item pointer" (click)="signOut()" (click)="isNavbarCollapsed = true">
+              <a class="nav-link">Sign Out</a>
+            </li>
+            <li class="dropdown-item pointer" (click)="isNavbarCollapsed = true">
+              <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="['/profile']">Profile</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>

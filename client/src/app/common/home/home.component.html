@@ -1,0 +1,32 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6">
+      <ngb-carousel *ngIf="images">
+        <ng-template ngbSlide>
+          <img class="img-fluid" [src]="images[0]" alt="Random first slide" >
+          <div class="carousel-caption">
+            <h3>ExperiorTTC</h3>
+          </div>
+        </ng-template>
+        <ng-template ngbSlide>
+          <img class="img-fluid" [src]="images[1]" alt="Random second slide">
+          <div class="carousel-caption">
+            <h3>Sid Naresh</h3>
+          </div>
+        </ng-template>
+        <ng-template ngbSlide>
+          <img class="img-fluid" [src]="images[2]" alt="Random third slide">
+          <div class="carousel-caption">
+            <h3>Nandan Naresh</h3>
+          </div>
+        </ng-template>
+        <ng-template ngbSlide>
+          <img class="img-fluid" [src]="images[3]" alt="Random third slide">
+          <div class="carousel-caption">
+            <h3>Maria Sirakova</h3>
+          </div>
+        </ng-template>
+      </ngb-carousel>
+    </div>
+  </div>
+</div>
