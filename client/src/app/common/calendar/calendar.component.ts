@@ -450,11 +450,12 @@ export class CalendarComponent implements OnInit {
     }
   }
 
-  openDialog(daySchedule, year, month) {
+  openDialog(daySchedule) {
     let dialogRef = this.dialog.open(EventEditModalDialogComponent, {
       width: '550px',
       data: {
         daySchedule: daySchedule
+      }
     });
     console.log('in edit openDialog: ', dialogRef);
 

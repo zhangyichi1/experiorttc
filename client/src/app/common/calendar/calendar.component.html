@@ -29,7 +29,7 @@
   <div class="row border border-right-0 border-bottom-0" *ngFor="let weekSchedule of currentMonthView">
       <a class="day col-md p-2 border border-left-0 border-top-0 text-truncate"
       [ngClass]="{'current': daySchedule.month == currentMonth, 'd-none': daySchedule.month != currentMonth, 'd-md-block': daySchedule.month != currentMonth}"
-      *ngFor="let daySchedule of weekSchedule" (click)="openDialog(daySchedule, daySchedule.year, daySchedule.month)">
+      *ngFor="let daySchedule of weekSchedule" (click)="openDialog(daySchedule)">
         <h5 class="row align-items-center">
           <span class="date col-1">{{ daySchedule.day }}</span>
           <small class="col d-md-none text-center text-muted">{{ daySchedule.dayOfWeek }}</small>
