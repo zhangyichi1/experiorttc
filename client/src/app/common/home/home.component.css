@@ -1,0 +1,31 @@
+.trainingJumbotron {
+  background-image: url('/assets/img/1.jpg');
+  background-size: 100% 100%;
+  min-height: 35em;
+  margin-top: 3em;
+  color: #ff6600;
+}
+
+.trainingJumbotron2 {
+  background-image: url('/assets/img/2.jpg');
+  background-size: 100% 100%;
+  min-height: 35em;
+  margin-top: 3em;
+  color: #ff6600;
+}
+
+.fridayLeague {
+  background-image: url('/assets/img/0.jpg');
+  background-size: 100% 100%;
+  min-height: 35em;
+  margin-top: 3em;
+  color: #ff6600;
+}
+
+footer {
+
+}
+
+iframe {
+
+}

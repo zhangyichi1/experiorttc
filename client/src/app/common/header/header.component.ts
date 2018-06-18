@@ -34,6 +34,11 @@ export class HeaderComponent implements OnInit {
       this.isSignedIn = true;
       this.user = user;
     })
+
+    this.eventService.signInExpireEvent.subscribe(() => {
+      this.isSignedIn = false;
+      this.user = null;
+    })
   }
 
   signOut() {

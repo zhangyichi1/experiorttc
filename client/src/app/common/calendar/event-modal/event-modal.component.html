@@ -1,0 +1,42 @@
+<!-- <ng-template #eventModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Create your event!</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form [formGroup]="eventForm" (submit)="createEvent()">
+    <div class="modal-body">
+      <div class="formGroup">
+        <label for="title">Title: </label>
+        <input class="form-control" type="text" formControlName="title">
+      </div>
+      <div class="formGroup">
+        <label for="date">Date: </label>
+        <input class="form-control" type="text" formControlName="date">
+      </div>
+      <div class="formGroup">
+        <label for="description">Description: </label>
+        <input class="form-control" type="text" formControlName="description">
+      </div>
+      <div class="formGroup">
+        <label for="color">Color: </label>
+        <input class="form-control" type="text" formControlName="color">
+      </div>
+      <div class="formGroup">
+        <label for="participants">Participants: </label>
+        <input class="form-control" type="text" formControlName="participants">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary btn-block" type="submit">Create Event</button>
+    </div>
+  </form>
+
+</ng-template>
+
+<button type="button" class="btn btn-primary btn-block" (click)="open(eventModal)">Create Event</button> -->
+
+
+
+<button mat-fab (click)="openDialog()"><i class="fa fa-plus" aria-hidden="true"></i></button>

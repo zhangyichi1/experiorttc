@@ -1,10 +1,27 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { rootRouterConfig } from './app.routes'
+import { AppRoutesModule } from './app-routes.module';
+
+import { CdkTableModule } from '@angular/cdk/table';
+import {
+  MatAutocompleteModule,
+  MatButtonModule,
+  MatButtonToggleModule,
+  MatCardModule,
+  MatCheckboxModule,
+  MatNativeDateModule,
+  MatDatepickerModule,
+  MatDialogModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatSelectModule
+} from '@angular/material';
+import { Angular5TimePickerModule } from 'angular5-time-picker';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
@@ -20,20 +37,19 @@ import { ProfileComponent } from './common/profile/profile.component';
 import { AuthenticationComponent } from './common/authentication/authentication.component';
 import { SignupComponent } from './common/authentication/signup/signup.component';
 import { SigninComponent } from './common/authentication/signin/signin.component';
+import { CalendarComponent } from './common/calendar/calendar.component';
+import { EventModalComponent } from './common/calendar/event-modal/event-modal.component';
+import { EventModalDialogComponent } from './common/calendar/event-modal/event-modal.component';
+import { EventEditModalDialogComponent } from './common/calendar/calendar.component';
+
+import { firebaseConfig } from './config/config';
 
 import { AuthService } from './common/services/auth.service';
 import { EventService } from './common/services/event.service';
+import { CalendarService } from './common/services/calendar.service';
 
 import { UserSignInGuard } from './common/guards/user-signin.guard';
-
-export const firebaseConfig = {
-  apiKey: "AIzaSyA4s7fD7eN4V5J4Ym3fXN-QNHKc0WmXw_0",
-  authDomain: "experiorttc-7b04d.firebaseapp.com",
-  databaseURL: "https://experiorttc-7b04d.firebaseio.com",
-  projectId: "experiorttc-7b04d",
-  storageBucket: "experiorttc-7b04d.appspot.com",
-  messagingSenderId: "493874735216"
-}
+import { CalendarResolver } from './common/calendar/calendar-resolver.service';
 
 @NgModule({
   declarations: [
@@ -44,22 +60,41 @@ export const firebaseConfig = {
     ProfileComponent,
     AuthenticationComponent,
     SignupComponent,
-    SigninComponent
+    SigninComponent,
+    CalendarComponent,
+    EventModalComponent,
+    EventModalDialogComponent,
+    EventEditModalDialogComponent
   ],
   imports: [
     BrowserModule,
+    AppRoutesModule,
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
     HttpClientModule,
-    RouterModule.forRoot(rootRouterConfig),
     NgbModule.forRoot(),
     AngularFontAwesomeModule,
     FlashMessagesModule.forRoot(),
     AngularFireModule.initializeApp(firebaseConfig),
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    BrowserAnimationsModule,
+    Angular5TimePickerModule,
+    CdkTableModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule
   ],
-  providers: [AuthService, EventService, UserSignInGuard],
+  entryComponents: [EventModalDialogComponent, EventEditModalDialogComponent],
+  providers: [AuthService, EventService, CalendarService, UserSignInGuard, CalendarResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

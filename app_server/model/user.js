@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
 
-let userSchema = new Schema({
+const userSchema = new Schema({
   email: {
     type: String,
     reuqired: true,
@@ -16,7 +16,10 @@ let userSchema = new Schema({
     type: String,
     reuqired: true
   },
-  role: []
+  role: {
+    type: [String],
+    required: true
+  }
 });
 
 // userSchema.pre('save', function(next) {
@@ -34,12 +37,7 @@ let userSchema = new Schema({
 //   });
 // });
 
-
-// userSchema.methods.checkPassword = function(password) {
-//   return bcrypt.compareSync(password, this.password);
-// };
-
-const User = module.exports = mongoose.model('user', userSchema);
+const User = module.exports = mongoose.model('user', userSchema, 'users');
 
 module.exports.getUserById = function(id, callback) {
   User.findById(id, callback);
@@ -51,15 +49,6 @@ module.exports.getUserByEmail = function(email, callback) {
 
 module.exports.addUser = function(newUser, callback) {
   newUser.role.push('user');
-  // bcrypt.hash(newUser.password, null, null, (err, hash) => {
-  //   if(err) {
-  //     callback(true);
-  //   }else {
-  //     newUser.password = hash;
-  //     console.log(newUser.password);
-  //     newUser.save(callback);
-  //   }
-  // });
   bcrypt.genSalt(10, (err, salt) => {
     bcrypt.hash(newUser.password, salt, (err, hash) => {
       if(err) {
@@ -67,7 +56,7 @@ module.exports.addUser = function(newUser, callback) {
       }else {
         newUser.password = hash;
         console.log(newUser.password);
-        newUser.save(callback, newUser);
+        newUser.save(callback);
       }
     });
   });

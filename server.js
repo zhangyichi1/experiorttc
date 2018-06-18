@@ -21,7 +21,7 @@ const server = express();
 // server.set('view engine', 'html');
 // server.set('view engine', 'jade');
 
-server.use(favicon(__dirname + '/client/src/assets/img/experior-icon-rectangle.jpg'));
+server.use(favicon(__dirname + '/client/src/assets/img/logo.jpg'));
 server.use(morgan('dev'));
 // console.log('config: ', config.database);
 mongoose.connect(config.database, (err) => {
@@ -36,8 +36,8 @@ mongoose.connect(config.database, (err) => {
 server.use(cors());
 
 //set up bodyParser
-server.use(bodyParser.json());
-server.use(bodyParser.urlencoded({ extended: true }));
+server.use(bodyParser.json({ limit: '50mb' }));
+server.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
 //set static folder
 server.use(express.static(path.join(__dirname, 'public')));

@@ -17,19 +17,7 @@ export class AuthService {
   constructor(private http: Http,
               public afAuth: AngularFireAuth,
               private eventService: EventService) {
-              // this.afAuth.authState.subscribe((auth) => {
-                // this.authState = auth;
 
-                // console.log('in constructor auth token is: ', auth.getIdToken());
-                // console.log('in constructor email is: ', auth.email);
-                // console.log('in constructor username is: ', auth.displayName);
-                // this.storeUserData(data.token, data.user);
-                // this.flashMessages.show('Sign in successfully, redirecting to homepage...', { cssClass: 'alert-success', timeout: 3000 });
-                // setTimeout(() => {
-                //   this.eventService.signInStateChange(data.user);
-                //   this.router.navigate(['/home']);
-                // }, 1000);
-              // })
              }
 
   validateSignUp(user) {
@@ -72,7 +60,7 @@ export class AuthService {
     return this.http.post('http://localhost:3000/api/signin', user, { headers: headers })
       .pipe(map((res) => {
         return res.json();
-      }))
+      }));
   }
 
   signOut() {
@@ -90,7 +78,7 @@ export class AuthService {
     return this.http.get('http://localhost:3000/api/profile', { headers: headers })
       .pipe(map((res) => {
         return res.json();
-      }))
+      }));
   }
 
   storeUserData(token, user) {

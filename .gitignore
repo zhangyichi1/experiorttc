@@ -3,3 +3,4 @@
 
 #secret
 /app_server/config/database.js
+/app_server/config/privateKey.json

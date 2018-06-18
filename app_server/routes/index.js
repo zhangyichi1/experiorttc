@@ -8,8 +8,16 @@ router.post('/signup', routeCtrl.signUp);
 
 router.post('/signin', routeCtrl.signIn);
 
+router.post('/calendar', routeCtrl.addCalendar);
+
+router.post('/event', routeCtrl.addEvent);
+
+router.get('/calendar/:currentYear', routeCtrl.getCalendar);
+
 // router.get('/profile', passport.authenticate('jwt', {session:false}), routeCtrl.authenticate);
 router.get('/profile', routeCtrl.authenticate);
+
+router.delete('/event/:year/:month/:day/:eventIndex', routeCtrl.deleteEvent);
 
 
 module.exports = router;

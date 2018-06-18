@@ -29,9 +29,9 @@ export class SignupComponent implements OnInit {
     let password = '';
 
     this.signUpForm = new FormGroup({
-      'email': new FormControl(email),
-      'username': new FormControl(username),
-      'password': new FormControl(password)
+      email: new FormControl(email),
+      username: new FormControl(username),
+      password: new FormControl(password)
     })
 
     // console.log(this.signUpForm);

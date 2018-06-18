@@ -1,0 +1,68 @@
+<div class="container-fluid">
+  <header>
+    <app-event-modal class="floatButton" (createCalendarEvent)="addEvent($event)"></app-event-modal>
+    <!-- <app-event-modal class="floatButton2" (createCalendarEvent)="addEvent($event)" *ngIf="device == 'tablet'"></app-event-modal>
+    <app-event-modal class="floatButton3" (createCalendarEvent)="addEvent($event)" *ngIf="device == 'mobile'"></app-event-modal> -->
+    <h3 class="d-none d-md-block display-4 mb-4 text-center dateHeader">
+      <small><a (click)="preMonth()"><i class="fa fa-chevron-left" aria-hidden="true"></i></a></small>
+      &nbsp; {{ currentViewMonthSchedule.month }} {{ currentViewYear }} &nbsp;
+      <small><a (click)="nextMonth()"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></small>
+    </h3>
+    <h4 class="d-block d-md-none text-center dateHeader">
+      <small><a (click)="preMonth()"><i class="fa fa-chevron-left" aria-hidden="true"></i></a></small>
+      &nbsp; {{ currentViewMonthSchedule.month }} {{ currentViewYear }} &nbsp;
+      <small><a (click)="nextMonth()"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></small>
+    </h4>
+    <!-- <button mat-raised-button (click)="addCalendar()">Add Calendar</button> -->
+    <hr>
+    <div class="row d-none d-md-flex p-1 bg-info text-black">
+      <h5 class="col-sm p-1 text-center">Sunday</h5>
+      <h5 class="col-sm p-1 text-center">Monday</h5>
+      <h5 class="col-sm p-1 text-center">Tuesday</h5>
+      <h5 class="col-sm p-1 text-center">Wednesday</h5>
+      <h5 class="col-sm p-1 text-center">Thursday</h5>
+      <h5 class="col-sm p-1 text-center">Friday</h5>
+      <h5 class="col-sm p-1 text-center">Saturday</h5>
+    </div>
+  </header>
+
+  <div class="row border border-right-0 border-bottom-0" *ngFor="let weekSchedule of currentMonthView">
+      <a class="day col-md p-2 border border-left-0 border-top-0 text-truncate"
+      [ngClass]="{'current': daySchedule.month == currentMonth, 'd-none': daySchedule.month != currentMonth, 'd-md-block': daySchedule.month != currentMonth}"
+      *ngFor="let daySchedule of weekSchedule" (click)="openDialog(daySchedule, daySchedule.year, daySchedule.month)">
+        <h5 class="row align-items-center">
+          <span class="date col-1">{{ daySchedule.day }}</span>
+          <small class="col d-md-none text-center text-muted">{{ daySchedule.dayOfWeek }}</small>
+          <span class="col-1"></span>
+        </h5>
+        <!-- <p class="d-md-none" *ngIf="daySchedule.events.length == 0">no event</p> -->
+        <button mat-raised-button *ngIf="daySchedule.events.length == 0; else eventList">Add Event</button>
+        <ng-template #eventList>
+          <div *ngIf="daySchedule.events.length <= 2; else eventList2">
+            <a class="event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small text-white calEvent"
+            title="{{ event.title }}" *ngFor="let event of daySchedule.events; let i = index"
+            [ngStyle]="{'background-color': event.color}">{{ event.title }}</a>
+          </div>
+
+          <ng-template #eventList2>
+            <div>
+              <a class="event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small text-white calEvent"
+              title="{{ daySchedule.events[0].title }}"
+              [ngStyle]="{'background-color': daySchedule.events[0].color}">{{ daySchedule.events[0].title }}</a>
+              <a class="event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small text-white calEvent"
+              title="{{ daySchedule.events[1].title }}"
+              [ngStyle]="{'background-color': daySchedule.events[1].color}">{{ daySchedule.events[1].title }}</a>
+              <div class="row">
+                <a class="offset-md-3 col-md-3"><span class="dot"></span>
+                   <span class="dot"></span>
+                   <span class="dot"></span>
+                   <span class="dot"></span></a>
+              </div>
+            </div>
+          </ng-template>
+        </ng-template>
+      </a>
+      <div class="w-100"></div>
+  </div>
+
+</div>

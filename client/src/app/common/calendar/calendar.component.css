@@ -1,0 +1,77 @@
+/* 767 is not correct may due to bootstrap 4 or some calculation */
+
+.day h5 {
+  background-color: #feebb9;
+  padding: 3px 5px 5px;
+  margin: -8px -8px 8px -8px;
+}
+
+@media (max-width:767px) {
+  .display-4 {
+    font-size: 1.5rem;
+  }
+  .date {
+    padding-left: 4px;
+  }
+  h3 {
+    font-size: 3.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .day {
+    height: 14.2857vw;
+  }
+  .day h5 {
+    background-color: #f2d687;
+  }
+  .current {
+    background-color: #feebb9;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .calEvent {
+    height: 2.5vw;
+    /* font-size: 1rem; */
+  }
+}
+
+/* @media (max-width: 767px) { */
+  .floatButton {
+    position: absolute;
+    right: 7%;
+  }
+/* } */
+
+@media (min-width: 768px) and (max-width: 1025px) {
+  .floatButton {
+    position: absolute;
+    top: 11%;
+    right: 13%;
+  }
+}
+
+@media (min-width: 1025px) {
+  .floatButton {
+    position: absolute;
+    top: 20%;
+    right: 13%;
+  }
+}
+
+a {
+  cursor: pointer;
+}
+
+.dot {
+  height: 8px;
+  width: 8px;
+  background-color: #bf80ff;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dateHeader {
+  position: relative;
+}

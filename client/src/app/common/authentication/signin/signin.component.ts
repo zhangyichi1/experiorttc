@@ -28,8 +28,8 @@ export class SigninComponent implements OnInit {
     let password = '';
 
     this.signInForm = new FormGroup({
-      'email': new FormControl(email),
-      'password': new FormControl(password)
+      email: new FormControl(email),
+      password: new FormControl(password)
     });
   }
 
