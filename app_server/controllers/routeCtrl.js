@@ -133,7 +133,8 @@ module.exports.getCalendar = function(req, res) {
       if(!currentYearSchedule) {
         res.json({ success: false, message: 'yearSchedule not found' });
       }else {
-        yearSchedules.currentYearSchedule = currentYearSchedule;
+        yearSchedules.yearSchedules = [];
+        yearSchedules.yearSchedules.push(currentYearSchedule);
 
         // YearSchedule.getYearScheduleByYear(currentYear + 1, (err, nextYearSchedule) => {
         YearSchedule.findOne({year: currentYear + 1}, (err, nextYearSchedule) => {
@@ -141,9 +142,9 @@ module.exports.getCalendar = function(req, res) {
             res.json({ success: false, message: err });
           }
           if(!nextYearSchedule) {
-            res.json({ success: true, message: 'yearSchedule not found' });
+            res.json({ success: false, message: 'yearSchedule not found' });
           }else {
-            yearSchedules.nextYearSchedule = nextYearSchedule;
+            yearSchedules.yearSchedules.push(nextYearSchedule);
             // console.log('yearSchedules is: ', yearSchedules)
             res.json({ success: true, yearSchedules: yearSchedules })
           }

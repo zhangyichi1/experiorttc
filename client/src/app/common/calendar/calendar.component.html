@@ -1,8 +1,6 @@
 <div class="container-fluid">
   <header>
     <app-event-modal class="floatButton" (createCalendarEvent)="addEvent($event)"></app-event-modal>
-    <!-- <app-event-modal class="floatButton2" (createCalendarEvent)="addEvent($event)" *ngIf="device == 'tablet'"></app-event-modal>
-    <app-event-modal class="floatButton3" (createCalendarEvent)="addEvent($event)" *ngIf="device == 'mobile'"></app-event-modal> -->
     <h3 class="d-none d-md-block display-4 mb-4 text-center dateHeader">
       <small><a (click)="preMonth()"><i class="fa fa-chevron-left" aria-hidden="true"></i></a></small>
       &nbsp; {{ currentViewMonthSchedule.month }} {{ currentViewYear }} &nbsp;

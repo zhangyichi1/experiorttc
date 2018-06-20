@@ -18,42 +18,32 @@ export class CalendarComponent implements OnInit {
 
   // yearSchedules: YearSchedule[];
 
-  currentYearSchedule: any;
-
-  nextYearSchedule: any;
-
-  monthSchedules: any[];
-
+  //the year schedule for the year of this day
+  currentYearSchedule: YearSchedule;
+  //the year schedule for the next year
+  nextYearSchedule: YearSchedule;
+  //an array of month schedules for the year of the page currently being viewed
+  monthSchedules: MonthSchedule[];
+  //the month number of the page that is currently being viewed, 0 based
   currentMonth: number;
-
+  //the year number of the page that is currently being viewed
   currentViewYear: number;
-
-  currentViewMonthSchedule: any;
-
-  previousViewMonthSchedule: any;
-
-  nextViewMonthSchedule: any;
-
-  currentMonthView: any[];
-
-  device: string;
+  //the month schedule for the page that is currently being viewed
+  currentViewMonthSchedule: MonthSchedule;
+  //the month schedule for the next month of the page that is currently being viewed
+  previousViewMonthSchedule: MonthSchedule;
+  //the month schedule for the previous month of the page that is currently being viewed
+  nextViewMonthSchedule: MonthSchedule;
+  //an array that's finally used to display the view, contains possibly few days of previous month and next month
+  currentMonthView: DaySchedule[][];
 
   constructor(private calendarService: CalendarService,
               private eventService: EventService,
               private dialog: MatDialog,
               private flashMessages: FlashMessagesService,
-              private route: ActivatedRoute) {
-
-  }
+              private route: ActivatedRoute) { }
 
   ngOnInit() {
-    if(window.screen.width < 768) {
-      this.device = 'mobile';
-    }else if(window.screen.width >= 768 && window.screen.width < 1025){
-      this.device = 'tablet';
-    }else {
-      this.device = 'computer';
-    }
 
     if(this.calendarService.checkYearSchedules()) {
       console.log('11111111');
@@ -107,8 +97,8 @@ export class CalendarComponent implements OnInit {
     //nextYear is the future year
     this.route.data.subscribe((data: Data) => {
       console.log('data is: ', data)
-      this.currentYearSchedule = data.yearSchedules.yearSchedules.currentYearSchedule;
-      this.nextYearSchedule = data.yearSchedules.yearSchedules.nextYearSchedule;
+      this.currentYearSchedule = data.yearSchedules.yearSchedules.yearSchedules[0];
+      this.nextYearSchedule = data.yearSchedules.yearSchedules.yearSchedules[1];
       // this.currentYearSchedule = new YearSchedule(data.yearSchedules.yearSchedules.currentYearSchedule.year, data.yearSchedules.yearSchedules.currentYearSchedule.monthSchedules);
       // this.nextYearSchedule = new YearSchedule(data.yearSchedules.yearSchedules.nextYearSchedule.year, data.yearSchedules.yearSchedules.nextYearSchedule.monthSchedules);
       console.log('currentYearSchedule is: ', this.currentYearSchedule);
@@ -558,10 +548,13 @@ export class EventEditModalDialogComponent {
     this.endingHour = 0;
     this.endingMin = 0;
 
-    this.minStartingDate = new Date();
-    // this.minStartingHour = new Date().getHours();
-    // this.minStartingMin = new Date().getMinutes();
-    this.minEndingDate = new Date();
+    // these variables will be used in future improvements
+    // this.minStartingDate;
+    // this.minStartingHour;
+    // this.minStartingMin;
+    // this.minEndingDate;
+    // this.minEndingHour;
+    // this.minEndingMin;
 
     if(this.data.daySchedule.events.length == 0) {
       this.editMode = false;
