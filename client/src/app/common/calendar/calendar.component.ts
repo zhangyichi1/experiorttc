@@ -576,48 +576,6 @@ export class EventEditModalDialogComponent {
         });
       }
     }
-
-    // if(this.data.daySchedule.getEvents().length == 0) {
-    //
-    //   this.editMode = false;
-    //   let title = '';
-    //
-    //   let startingDate = new Date(this.data.month + '/' + this.data.daySchedule.getDay() + '/' + this.data.year);
-    //
-    //   let startingHour = 0;
-    //   let startingMin = 0;
-    //   let endingDate = new Date(this.data.month + '/' + this.data.daySchedule.getDay() + '/' + this.data.year);
-    //
-    //   let endingHour = 0;
-    //   let endingMin = 0;
-    //   let description = '';
-    //   let color = '';
-    //
-    //   this.eventForm = this.fb.group({
-    //     title: [title, [Validators.required]],
-    //     startingDate: [{ value: startingDate, disabled: true }, [Validators.required]],
-    //     startingHour: [startingHour, [Validators.required]],
-    //     startingMin: [startingMin, [Validators.required]],
-    //     endingDate: [{ value: endingDate, disabled: true }, [Validators.required]],
-    //     endingHour: [endingHour, [Validators.required]],
-    //     endingMin: [endingMin, [Validators.required]],
-    //     description: [description, [Validators.required]],
-    //     color: [color, [Validators.required]]
-    //   })
-    // }else {
-    //   this.editMode = true;
-    //   for(let i=0; i<this.data.daySchedule.getEvents().length; i++) {
-    //     let title = this.data.daySchedule.getEvents()[i].getTitle();
-    //     let startingTime = this.data.daySchedule.getEvents()[i].getStartingTime();
-    //     let endingTime = this.data.daySchedule.getEvents()[i].getEndingTime();
-    //     let description = this.data.daySchedule.getEvents()[i].getDescription();
-    //     let color = this.data.daySchedule.getEvents()[i].getColor();
-    //     this.events.push(new CalendarEvent(title, startingTime, endingTime, description, color));
-    //   }
-    // }
-
-    // console.log('in edit eventForm is: ', this.eventForm);
-    // console.log('in edit events are: ', this.events);
   }
 
   formatDate(date: Date): string {

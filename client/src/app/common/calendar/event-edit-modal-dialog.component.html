@@ -93,13 +93,7 @@
         <mat-form-field>
           <input matInput name="description" placeholder="Description" [(ngModel)]="event.description">
         </mat-form-field>
-
-        <!-- <mat-form-field>
-          <input matInput [matDatepicker]="startpicker" placeholder="Choose a date from toggle" name="startingTime" [(ngModel)]="event.startingTime"
-           [min]="minStartingDate" (dateInput)="checkingEndingDate()" required>
-          <mat-datepicker-toggle matSuffix [for]="startpicker" (dateInput)="checkingEndingDate()"></mat-datepicker-toggle>
-          <mat-datepicker #startpicker disabled="false" (dateInput)="checkingEndingDate()"></mat-datepicker>
-        </mat-form-field> -->
+        
         <mat-form-field>
           <input matInput placeholder="Starting Date" [value]="event.startingTime" disabled>
         </mat-form-field>

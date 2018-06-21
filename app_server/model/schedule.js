@@ -76,33 +76,14 @@ yearScheduleSchema.methods.updateYearSchedule = function(newYearSchedule, callba
 };
 
 yearScheduleSchema.methods.deleteEvent = function(month, day, eventIndex, callback) {
-  // console.log('this day is: ', this.monthSchedules[month].daySchedules[day]);
-  // console.log('this is: ', this.monthSchedules[month].daySchedules[day].events[eventIndex]);
   this.monthSchedules[month].daySchedules[day].events[eventIndex].remove();
   this.save(callback);
 }
 
 yearScheduleSchema.methods.addEvent = function(month, day, newEvent, callback) {
-  // console.log('this is: ', this);
   let selectedDay = this.monthSchedules[month].daySchedules[day];
   selectedDay.events.push(newEvent);
   this.save(callback);
 };
 
 const YearSchedule = module.exports = mongoose.model('yearSchedule', yearScheduleSchema, 'testSchedules');
-
-// module.exports.getYearScheduleById = function(id, callback) {
-//   YearSchedule.findById(id, callback);
-// };
-//
-// module.exports.getYearScheduleByYear = function(year, callback) {
-//   YearSchedule.findOne({year: year}, callback);
-// };
-//
-// module.exports.addYearSchedule = function(newYearSchedule, callback) {
-//   newYearSchedule.save(callback);
-// };
-//
-// module.exports.editYearSchedule = function(yearSchedule, callback) {
-//   // yearSchedule.save(callback);
-// };

@@ -104,8 +104,6 @@ export class AuthService {
 
   signInWithGoogle() {
     return this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then((data) => {
-      // console.log('in signin data is: ', data.user.displayName);
-      // console.log('in signin credential is: ', data.credential.idToken);
       this.user = {
         email: data.user.email,
         username: data.user.displayName

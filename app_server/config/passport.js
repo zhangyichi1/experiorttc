@@ -23,15 +23,15 @@ module.exports.jwtStrategy = function(passport) {
   }));
 };
 
-module.exports.googleStrategy = function(passport) {
-  passport.use(new FirebaseStrategy({
-      firebaseProjectId: config.firebaseProjectId,
-      authorizationURL: 'https://account.example.net/auth'
-    },
-    function(accessToken, refreshToken, decodedToken, cb) {
-      // User.findOrCreate(..., function (err, user) {
-      //   return cb(err, user);
-      // });
-    }
-  ));
-};
+// module.exports.googleStrategy = function(passport) {
+//   passport.use(new FirebaseStrategy({
+//       firebaseProjectId: config.firebaseProjectId,
+//       authorizationURL: 'https://account.example.net/auth'
+//     },
+//     function(accessToken, refreshToken, decodedToken, cb) {
+//       // User.findOrCreate(..., function (err, user) {
+//       //   return cb(err, user);
+//       // });
+//     }
+//   ));
+// };
