@@ -5,19 +5,36 @@ const YearSchedule = require('../model/schedule');
 const config = require('../config/database');
 const util = require('../controllers/util');
 
+// this method is for user sign up
 module.exports.signUp = function(req, res) {
-  // console.log('here is the req, ', req);
-  console.log(req.body);
+  // check if the required fields are in the body of request
   if(req.body.email == undefined || req.body.email == null || req.body.email == '' || req.body.username == undefined || req.body.username == null || req.body.username == ''
-  || req.body.password == undefined || req.body.password == null || req.body.password == '') {
+  || req.body.password == undefined || req.body.password == null || req.body.password == '' || req.body.roles == undefined || req.body.roles == null || req.body.roles == '') {
     res.json({ success: false, message: 'User information is not complete' });
   }else if(!util.validateEmail(req.body.email)) {
+    // check if email is in valid form
     res.json({ success: false, message: 'The email entered is invalid' })
   }else {
+    //create a new User model and setup the fields
     let newUser = new User();
     newUser.email = req.body.email;
     newUser.username = req.body.username;
     newUser.password = req.body.password;
+    newUser.roles = req.body.roles;
+    if(req.body.address != null && req.body.address != undefined) {
+      newUser.address = req.body.address;
+    }else {
+      newUser.address = '';
+    }
+    if(req.body.phone != null && req.body.phone != undefined) {
+      newUser.phone = req.body.phone;
+    }else {
+      newUser.phone = '';
+    }
+    console.log('new user is: ', newUser);
+    // Call User model's static method addUser to try to add this user to database
+    // if succeed set the expiration time of jwt token to 1h and return a json with
+    // the jwt token and user object
     User.addUser(newUser, (err, user) => {
       if(err) {
         res.json({ success: false, message: 'Email already exists, please sign in!' });
@@ -30,20 +47,24 @@ module.exports.signUp = function(req, res) {
           success: true,
           token: 'Bearer ' + token,
           user: {
-            id: user._id,
             email: user.email,
             username: user.username,
-            role: user.role
+            address: user.address,
+            phone: user.phone,
+            roles: user.roles
           }
         });
       }else {
+        // something unexpected happened
         res.json({ success: false, message: 'Registration failed' });
       }
     })
   }
 };
 
+// this method is for user sign in
 module.exports.signIn = function(req, res) {
+  // check for required fields in body of request
   if(req.body.email == undefined || req.body.email == null || req.body.email == ''
   || req.body.password == undefined || req.body.password == null || req.body.password == '') {
     res.json({ success: false, message: 'User information is not complete' });
@@ -55,7 +76,7 @@ module.exports.signIn = function(req, res) {
 
     User.getUserByEmail(email, (err, user) => {
       if(err) {
-        throw err;
+        res.json({ success: false, message: err });
       }
       if(!user) {
         res.json({ success: false, message: 'User not found' })
@@ -66,6 +87,7 @@ module.exports.signIn = function(req, res) {
           }
           if(valid) {
             console.log('user is: ', user);
+            console.log('user roles are: ', user.roles);
             const token = jwt.sign(user.toJSON(), config.secret, {
               expiresIn: '1h'
             });
@@ -73,10 +95,11 @@ module.exports.signIn = function(req, res) {
               success: true,
               token: 'Bearer ' + token,
               user: {
-                id: user._id,
                 email: user.email,
                 username: user.username,
-                role: user.role
+                address: user.address,
+                phone: user.phone,
+                roles: user.roles
               }
             });
           }else {
@@ -88,13 +111,54 @@ module.exports.signIn = function(req, res) {
   }
 };
 
-module.exports.authenticate = function(req, res) {
+module.exports.getUser = function(req, res) {
   // res.json({ user: req.user });
   res.json({ user: {
     email: 'temp@temp.com',
     username: 'temp'
   }});
 };
+
+module.exports.getUsers = function(req, res) {
+  res.json({
+    something: 'something'
+  })
+}
+
+module.exports.updateUser = function(req, res) {
+  let body = req.body;
+  if(body.email == undefined || body.email == null || body.email == '' ||
+     body.username == undefined || body.username == null || body.username == '' ||
+     body.address == undefined || body.address == null ||
+     body.phone == undefined || body.phone == null) {
+       res.json({ success: false, message: 'The information of updatedUser is not complete' });
+  }else {
+    User.findOne({ email: body.email }, (err, user) => {
+      if(err) {
+        res.json({ success: false, message: err })
+      }
+      if(!user) {
+        res.json({ success: false, message: 'User not found' });
+      }else {
+        user.update(body, (err, returnedUser) => {
+          if(err) {
+            res.json({ success: false, message: err });
+          }
+          if(!returnedUser) {
+            res.json({ success: false, message: 'User not updated due to some reasons, please try again' });
+          }
+          let updatedUser = new Object();
+          updatedUser.email = returnedUser.email;
+          updatedUser.username = returnedUser.username;
+          updatedUser.address = returnedUser.address;
+          updatedUser.phone = returnedUser.phone;
+          updatedUser.roles = returnedUser.roles;
+          res.json({ success: true, updatedUser: updatedUser, message: 'User has been successfully updated' });
+        })
+      }
+    });
+  }
+}
 
 module.exports.addCalendar = function(req, res) {
   console.log('in routeCtrl: ', req.body);
@@ -104,7 +168,6 @@ module.exports.addCalendar = function(req, res) {
     let newYearSchedule = new YearSchedule();
     newYearSchedule.year = req.body.year;
     newYearSchedule.monthSchedules = req.body.monthSchedules;
-    // YearSchedule.addYearSchedule(newYearSchedule, (err, yearSchedule) => {
     newYearSchedule.save((err, yearSchedule) => {
       if(err) {
         res.json({ success: false, message: 'this year of calendar has already been created' });
@@ -125,8 +188,7 @@ module.exports.getCalendar = function(req, res) {
   }else {
     let yearSchedules = new Object();
     const currentYear = parseInt(req.params.currentYear, 10);
-    // YearSchedule.getYearScheduleByYear(currentYear, (err, currentYearSchedule) => {
-    YearSchedule.findOne({year: currentYear}, (err, currentYearSchedule) => {
+    YearSchedule.findOne({ year: currentYear }, (err, currentYearSchedule) => {
       if(err) {
         res.json({ success: false, message: err });
       }
@@ -136,7 +198,6 @@ module.exports.getCalendar = function(req, res) {
         yearSchedules.yearSchedules = [];
         yearSchedules.yearSchedules.push(currentYearSchedule);
 
-        // YearSchedule.getYearScheduleByYear(currentYear + 1, (err, nextYearSchedule) => {
         YearSchedule.findOne({year: currentYear + 1}, (err, nextYearSchedule) => {
           if(err) {
             res.json({ success: false, message: err });
@@ -158,10 +219,10 @@ module.exports.addEvent = function(req, res) {
   if(req.body.newEvent == undefined || req.body.newEvent == null || req.body.year == undefined ||
      req.body.year == null || req.body.day == undefined || req.body.day == null ||
      req.body.month == undefined || req.body.month == null) {
-    console.log('im here 111');
+    // console.log('im here 111');
     res.json({ success: false, message: 'please send the new event and id of daySchedule to add event!' });
   }else {
-    console.log('im here 222');
+    // console.log('im here 222');
     //find the daySchedule
     YearSchedule.findOne({ year: req.body.year }, (err, yearSchedule) => {
       if(err) {

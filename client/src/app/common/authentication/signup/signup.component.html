@@ -1,8 +1,40 @@
-<div class="container authForm">
+<div fxLayout="row">
+  <div fxFlexOffset.gt-xs="25%" fxFlex.gt-xs="0 0 50%" fxFlex.xs="1 0 0">
+    <fieldset>
+      <legend>Sign Up</legend>
+      <form #f="ngForm">
+        <mat-form-field class="form-field">
+          <input matInput pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$" type="email" placeholder="email" name="email" [(ngModel)]="email" required>
+        </mat-form-field>
+        <br>
+        <mat-form-field class="form-field">
+          <input matInput type="text" placeholder="username needs to be at least 4 characters" name="username" [(ngModel)]="username" minlength="4" required>
+        </mat-form-field>
+        <br>
+        <mat-form-field class="form-field" name="password">
+          <input matInput type="password" placeholder="password needs to be at least 4 characters" name="password" [(ngModel)]="password" minlength="4" required>
+        </mat-form-field>
+        <br>
+        <mat-form-field class="form-field">
+          <input matInput type="text" placeholder="address" name="address" [(ngModel)]="address">
+        </mat-form-field>
+        <br>
+        <mat-form-field class="form-field">
+          <input matInput type="text" placeholder="(111)-111-1111" name="phone" [(ngModel)]="phone">
+        </mat-form-field>
+        <br>
+        <div mat-dialog-actions>
+          <button class="signup-button" mat-raised-button color="primary" (click)="signUp(f)" [disabled]="!f.valid">Sign Up</button>
+        </div>
+      </form>
+    </fieldset>
+  </div>
+</div>
+<!-- <div class="container">
   <div class="row">
     <div class="col-sm-3"></div>
     <div class="col-sm-6">
-      <fieldset class="authField">
+      <fieldset>
         <legend align="center">Sign Up</legend>
         <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
           <div class="form-group">
@@ -28,4 +60,4 @@
       </fieldset>
     </div>
   </div>
-</div>
+</div> -->

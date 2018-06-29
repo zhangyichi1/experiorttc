@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { EventService } from '../../services/event.service';
 import { FlashMessagesService } from 'angular2-flash-messages';
 import { Router } from '@angular/router';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-signup',
@@ -12,7 +13,7 @@ import { Router } from '@angular/router';
 })
 export class SignupComponent implements OnInit {
 
-  signUpForm: FormGroup;
+  newUser: User;
 
   constructor(private authService: AuthService,
               private eventService: EventService,
@@ -20,51 +21,32 @@ export class SignupComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit() {
-    this.initForm();
   }
 
-  private initForm() {
-    let email = '';
-    let username = '';
-    let password = '';
-
-    this.signUpForm = new FormGroup({
-      email: new FormControl(email),
-      username: new FormControl(username),
-      password: new FormControl(password)
-    })
-
-    // console.log(this.signUpForm);
-  }
-
-  onSubmit() {
-    const user = {
-      email: this.signUpForm.value.email,
-      username: this.signUpForm.value.username,
-      password: this.signUpForm.value.password
-    }
-    // console.log(user);
-    if(!this.authService.validateSignUp(user)) {
+  signUp(form: NgForm) {
+    console.log('f value is: ', form.value);
+    this.newUser = new User(form.value.email, form.value.username, form.value.address, form.value.phone, form.value.password);
+    console.log('newUser is: ', this.newUser);
+    if(!this.authService.validateSignUp(this.newUser)) {
       this.flashMessages.show('All the fields are required', { cssClass: 'alert-danger', timeout: 3000 });
       return false;
-    }else if(!this.authService.validateEmail(user.email)) {
+    }else if(!this.authService.validateEmail(this.newUser.getEmail())) {
       this.flashMessages.show('Email entered is invalid', { cssClass: 'alert-danger', timeout: 3000 });
       return false;
     }else {
-      // console.log(this.authService.registerUser(user));
-      this.authService.signUpUser(user).subscribe((data) => {
-        // console.log('data is: ', data);
+      this.authService.signUpUser(this.newUser).subscribe((data) => {
         if(data.success) {
-          this.authService.storeUserData(data.token, data.user);
+          let user = new User(data.user.email, data.user.username, data.user.address, data.user.phone, null, data.user.roles);
+          this.authService.storeUserData(data.token, user);
           this.flashMessages.show('User registered, redirecting to homepage...', { cssClass: 'alert-success', timeout: 3000 });
           setTimeout(() => {
-            this.eventService.signInStateChange(data.user);
+            this.eventService.signInStateChange(user);
             this.router.navigate(['/home']);
           }, 1000);
         }else {
-          this.flashMessages.show('Registration failed', { cssClass: 'alert-danger', timeout: 3000 });
+          this.flashMessages.show(data.message, { cssClass: 'alert-danger', timeout: 3000 });
           setTimeout(() => {
-            this.router.navigate(['/authentication/signup']);
+            this.router.navigate(['/authentication/signin']);
           }, 1000);
         }
       });

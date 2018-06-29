@@ -1,7 +1,36 @@
-<div *ngIf="user">
-  <h2 class="page-header">{{ user.username }}</h2>
-  <ul class="list-group">
-    <li class="list-group-item">Email: {{ user.email }}</li>
-    <li class="list-group-item">Phone: </li>
-  </ul>
+<div fxLayout="row">
+  <div fxFlexOffset.gt-xs="25%" fxFlex.gt-xs="0 0 50%" fxFlex.xs="1 0 0">
+    <fieldset>
+      <legend>{{ currUsername }}</legend>
+      <br>
+      <form #f="ngForm">
+
+        <mat-form-field class="form-field" [floatLabel]="'never'">
+          <label for="currEmail">Email: </label>
+          <input matInput pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$" type="email" placeholder="Email" name="currEmail"  [readonly]="!editMode" [(ngModel)]="currEmail" required>
+        </mat-form-field>
+        <br>
+        <mat-form-field class="form-field" [floatLabel]="'never'">
+          <label for="currUsername">Username: </label>
+          <input matInput type="text" placeholder="Username" name="currUsername" minlength="4" [readonly]="!editMode" [(ngModel)]="currUsername">
+        </mat-form-field>
+        <br>
+        <mat-form-field class="form-field" [floatLabel]="'never'">
+          <label for="currAddress">Address: </label>
+          <input matInput type="text" placeholder="Address" name="currAddress" [readonly]="!editMode" [(ngModel)]="currAddress">
+        </mat-form-field>
+        <br>
+        <mat-form-field class="form-field" [floatLabel]="'never'">
+          <label for="currPhone">Phone: </label>
+          <input matInput type="text" placeholder="(111)-111-1111" name="currPhone" [readonly]="!editMode" [(ngModel)]="currPhone">
+        </mat-form-field>
+        <br>
+        <div mat-dialog-actions fxLayoutAlign="end">
+          <button mat-raised-button color="accent" (click)="edit()" *ngIf="!editMode">Edit</button>
+          <button mat-raised-button color="warn" (click)="edit()" *ngIf="editMode">Cancel</button>
+          <button mat-raised-button color="primary" (click)="save(f)" [disabled]="!f.valid || !f.dirty || !editMode">Save</button>
+        </div>
+      </form>
+    </fieldset>
+  </div>
 </div>

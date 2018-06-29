@@ -4,13 +4,14 @@ const User = require('../model/user');
 const config = require('./database');
 const FirebaseStrategy = require('passport-firebase-auth').strategy;
 
-
+//local authentication strategy
 module.exports.jwtStrategy = function(passport) {
   let opts = {};
   opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
   opts.secretOrKey = config.secret;
   passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
     console.log('jwt_payload is: ', jwt_payload);
+    //check the id in jwt token to see if the user exists
     User.getUserById(jwt_payload._id, (err, user) => {
       if(err) {
         return done(err, false);

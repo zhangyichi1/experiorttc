@@ -1,0 +1,13 @@
+/* make title and description fields full width */
+.modal-container > .full-width {
+  width: 100%;
+}
+
+/* .date is for aligning 3 date fields in one row */
+.modal-container > .date {
+  width: 32%;
+}
+
+textarea {
+  height: 40px;
+}

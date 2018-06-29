@@ -1,0 +1,11 @@
+textarea {
+  height: 40px;
+}
+
+.modal-container > .full-width {
+  width: 100%;
+}
+
+.modal-container > .date {
+  width: 32%;
+}

@@ -16,9 +16,15 @@ const userSchema = new Schema({
     type: String,
     reuqired: true
   },
-  role: {
+  roles: {
     type: [String],
     required: true
+  },
+  address: {
+    type: String
+  },
+  phone: {
+    type: String
   }
 });
 
@@ -37,6 +43,14 @@ const userSchema = new Schema({
 //   });
 // });
 
+userSchema.methods.update = function(body, callback) {
+  this.email = body.email;
+  this.username = body.username;
+  this.address = body.address;
+  this.phone = body.phone;
+  this.save(callback);
+}
+
 const User = module.exports = mongoose.model('user', userSchema, 'users');
 
 module.exports.getUserById = function(id, callback) {
@@ -48,7 +62,6 @@ module.exports.getUserByEmail = function(email, callback) {
 };
 
 module.exports.addUser = function(newUser, callback) {
-  newUser.role.push('user');
   bcrypt.genSalt(10, (err, salt) => {
     bcrypt.hash(newUser.password, salt, (err, hash) => {
       if(err) {

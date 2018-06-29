@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
 import { map } from 'rxjs/operators';
-import { YearSchedule, MonthSchedule, DaySchedule, CalendarEvent } from './schedule.model';
+import { YearSchedule, MonthSchedule, DaySchedule, CalendarEvent } from '../models/schedule.model';
 
 import { CalendarService } from '../services/calendar.service';
 

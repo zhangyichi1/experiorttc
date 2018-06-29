@@ -1,1 +1,6 @@
-
+.calendar-button {
+  font-size: 1.1rem;
+  font-weight: 300;
+  display: block !important;
+  width: 100% !important;
+}

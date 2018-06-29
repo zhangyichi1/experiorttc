@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Response } from '@angular/http';
 import { map, tap } from 'rxjs/operators';
-import { DaySchedule, MonthSchedule, YearSchedule, CalendarEvent } from '../calendar/schedule.model';
+import { DaySchedule, MonthSchedule, YearSchedule, CalendarEvent } from '../models/schedule.model';
 import { EventService } from './event.service';
 import { Observable } from 'rxjs/observable';
 
@@ -17,7 +17,7 @@ const httpOptions = {
 interface UpdatedDaySchedule {
   success: boolean,
   message: string,
-  updatedDaySchedule: any
+  updatedDaySchedule: DaySchedule
 }
 @Injectable()
 export class CalendarService {
@@ -33,14 +33,6 @@ export class CalendarService {
 
     this.yearSchedules = [];
     this.date = new Date();
-
-    // this.getYearSchedules(this.date.getFullYear()).subscribe((data) => {
-    //   // console.log('in calendar constructor data is: ', data);
-    //   this.currentYearSchedule = data.yearSchedules.currentYearSchedule;
-    //   this.nextYearSchedule = data.yearSchedules.nextYearSchedule;
-    //   console.log('in calendar constructor currentYearSchedule is: ', this.currentYearSchedule);
-    //   console.log('in calendar constructor nextYearSchedule is: ', this.nextYearSchedule);
-    // });
 
     // this.generateYearSchedules();
     // this.yearSchedules = [this.currentYearSchedule, this.nextYearSchedule];

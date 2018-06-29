@@ -1,8 +1,35 @@
-<div class="container authForm">
+<div fxLayout="row">
+  <div fxFlexOffset.gt-xs="25%" fxFlex.gt-xs="0 0 50%" fxFlex.xs="1 0 0">
+    <fieldset>
+      <legend>Sign In</legend>
+      <form #f="ngForm">
+        <mat-form-field class="form-field">
+          <input matInput pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$" type="email" placeholder="email" name="email" [(ngModel)]="email" required>
+        </mat-form-field>
+        <br>
+        <mat-form-field class="form-field">
+          <input matInput type="password" placeholder="password" name="password" [(ngModel)]="password" minlength="4" required>
+        </mat-form-field>
+        <br>
+        <div mat-dialog-actions>
+          <button class="signin-button" mat-raised-button color="primary" (click)="signIn(f)" [disabled]="!f.valid">Sign In</button>
+          <br>
+          <button class="signin-button" mat-raised-button color="accent" (click)="signInWithGoogle()">
+            <i class="fa fa-google-plus" aria-hidden="true"></i> Sign In With Gmail
+          </button>
+          <br>
+          <p>Don't have an account? Please <a href="" [routerLink]="['/authentication/signup']">Sign Up</a> </p>
+        </div>
+      </form>
+    </fieldset>
+  </div>
+</div>
+
+<!-- <div class="container">
   <div class="row">
     <div class="col-sm-3"></div>
     <div class="col-sm-6">
-      <fieldset class="authField">
+      <fieldset>
         <legend align="center">Sign In</legend>
         <form [formGroup]="signInForm" (ngSubmit)="onSubmit()">
           <div class="form-group">
@@ -20,10 +47,10 @@
             Sign In
           </button>
           <button type="button" class="btn btn-outline-info btn-block" (click)="signInWithGoogle()">
-            <i class="fa fa-google-plus" aria-hidden="true"></i> Sign In With Gmail 
+            <i class="fa fa-google-plus" aria-hidden="true"></i> Sign In With Gmail
           </button>
         </form>
       </fieldset>
     </div>
   </div>
-</div>
+</div> -->

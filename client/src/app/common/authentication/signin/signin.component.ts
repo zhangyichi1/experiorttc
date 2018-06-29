@@ -1,9 +1,10 @@
 import { Component, OnInit, Input, HostListener } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { EventService } from '../../services/event.service';
 import { FlashMessagesService } from 'angular2-flash-messages';
 import { Router } from '@angular/router';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-signin',
@@ -12,7 +13,8 @@ import { Router } from '@angular/router';
 })
 export class SigninComponent implements OnInit {
 
-  signInForm: FormGroup;
+  email: string;
+  password: string;
 
   constructor(private authService: AuthService,
               private eventService: EventService,
@@ -20,23 +22,14 @@ export class SigninComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit() {
-    this.initForm();
+    this.email = '';
+    this.password = '';
   }
 
-  private initForm() {
-    let email = '';
-    let password = '';
-
-    this.signInForm = new FormGroup({
-      email: new FormControl(email),
-      password: new FormControl(password)
-    });
-  }
-
-  onSubmit() {
+  signIn(form: NgForm) {
     const user = {
-      email: this.signInForm.value.email,
-      password: this.signInForm.value.password
+      email: form.value.email,
+      password: form.value.password
     }
 
     if(!this.authService.validateSignIn(user)) {
@@ -49,10 +42,11 @@ export class SigninComponent implements OnInit {
       this.authService.signInUser(user).subscribe((data) => {
         // console.log('data is: ', data);
         if(data.success) {
-          this.authService.storeUserData(data.token, data.user);
+          let user = new User(data.user.email, data.user.username, data.user.address, data.user.phone, null, data.user.roles);
+          this.authService.storeUserData(data.token, user);
           this.flashMessages.show('Sign in successfully, redirecting to homepage...', { cssClass: 'alert-success', timeout: 3000 });
           setTimeout(() => {
-            this.eventService.signInStateChange(data.user);
+            this.eventService.signInStateChange(user);
             this.router.navigate(['/home']);
           }, 1000);
         }else {

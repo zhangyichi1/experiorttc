@@ -1,0 +1,15 @@
+.form-field {
+  width: 100%;
+}
+
+.signin-button {
+  font-size: 1.1rem;
+  font-weight: 300;
+  display: block !important;
+  width: 100% !important;
+}
+
+p > a{
+  color: dodgerblue;
+  text-decoration: none;
+}

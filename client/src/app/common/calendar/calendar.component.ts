@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { DaySchedule, MonthSchedule, YearSchedule, CalendarEvent } from './schedule.model';
+import { DaySchedule, MonthSchedule, YearSchedule, CalendarEvent } from '../models/schedule.model';
 import { CalendarService } from '../services/calendar.service';
 import { EventService } from '../services/event.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -17,6 +17,8 @@ const daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday',
 export class CalendarComponent implements OnInit {
 
   // yearSchedules: YearSchedule[];
+
+  date: Date;
 
   //the year schedule for the year of this day
   currentYearSchedule: YearSchedule;
@@ -45,6 +47,7 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit() {
 
+    this. date = new Date();
     if(this.calendarService.checkYearSchedules()) {
       console.log('11111111');
       this.currentYearSchedule = this.calendarService.getCurrentYearSchedule();
@@ -406,8 +409,17 @@ export class CalendarComponent implements OnInit {
     }
   }
 
+  isCurrentMonth(month: number) {
+    if(month == this.currentMonth) {
+      return true;
+    }else {
+      return false;
+    }
+  }
+
   addEvent(event) {
     console.log('event is: ', event);
+    //get event time from event and check if it's beyond the range, if yes show warning msg
     if(event != null && event != undefined) {
       let date = event.startingTime;
       console.log('date is: ', date);
@@ -422,6 +434,8 @@ export class CalendarComponent implements OnInit {
         this.flashMessages.show('you can\'t add calendar event before current year ', { cssClass: 'alert-danger', timeout: 5000 });
         return;
       }
+      //call calendarService's addEvent method to complete the addition, if success set specified
+      //daySchedule to updatedDaySchedule and reset the view
       this.calendarService.addEvent(event, year, month, day).subscribe((data) => {
         console.log('in addEvent data is: ', data);
         if(data.success) {
@@ -440,6 +454,8 @@ export class CalendarComponent implements OnInit {
     }
   }
 
+  //use material dialog module to build a dialog component
+  //get daySchedule object and pass it to the dialog component
   openDialog(daySchedule) {
     let dialogRef = this.dialog.open(EventEditModalDialogComponent, {
       width: '550px',
@@ -449,9 +465,12 @@ export class CalendarComponent implements OnInit {
     });
     console.log('in edit openDialog: ', dialogRef);
 
+    //
     dialogRef.afterClosed().subscribe(event => {
       console.log('in afterclosed, new event is: ', event);
-      this.addEvent(event);
+      if(event != null && event != undefined) {
+        this.addEvent(event);
+      }
     });
   }
 }
@@ -459,7 +478,8 @@ export class CalendarComponent implements OnInit {
 
 @Component({
   selector: 'app-event-edit-modal-dialog',
-  templateUrl: 'event-edit-modal-dialog.component.html',
+  templateUrl: './event-edit-modal-dialog.component.html',
+  styleUrls: ['./event-edit-modal-dialog.component.css']
 })
 export class EventEditModalDialogComponent {
 

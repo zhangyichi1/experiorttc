@@ -15,8 +15,7 @@ const calendarEventSchema = new Schema({
     required: true
   },
   description: {
-    type: String,
-    required: true
+    type: String
   },
   color: {
     type: String,
@@ -81,8 +80,9 @@ yearScheduleSchema.methods.deleteEvent = function(month, day, eventIndex, callba
 }
 
 yearScheduleSchema.methods.addEvent = function(month, day, newEvent, callback) {
-  let selectedDay = this.monthSchedules[month].daySchedules[day];
-  selectedDay.events.push(newEvent);
+  // let selectedDay = this.monthSchedules[month].daySchedules[day];
+  // selectedDay.events.push(newEvent);
+  this.monthSchedules[month].daySchedules[day].events.push(newEvent);
   this.save(callback);
 };
 

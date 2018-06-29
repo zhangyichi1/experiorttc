@@ -1,12 +1,6 @@
 /* 767 is not correct may due to bootstrap 4 or some calculation */
 
-.day h5 {
-  background-color: #feebb9;
-  padding: 3px 5px 5px;
-  margin: -8px -8px 8px -8px;
-}
-
-@media (max-width:767px) {
+/* @media (max-width:767px) {
   .display-4 {
     font-size: 1.5rem;
   }
@@ -16,9 +10,9 @@
   h3 {
     font-size: 3.5rem;
   }
-}
+} */
 
-@media (min-width: 768px) {
+/* @media (min-width: 768px) {
   .day {
     height: 14.2857vw;
   }
@@ -28,23 +22,22 @@
   .current {
     background-color: #feebb9;
   }
-}
+} */
 
-@media (min-width: 768px) and (max-width: 991px) {
-  .calEvent {
-    height: 2.5vw;
-    /* font-size: 1rem; */
-  }
-}
+/* .floatButton {
+  position: absolute;
+  right: 7%;
+} */
 
-/* @media (max-width: 767px) { */
+/* @media (min-width: 768px) {
   .floatButton {
     position: absolute;
-    right: 7%;
+    top: 15%;
+    right: 13%;
   }
-/* } */
+}
 
-@media (min-width: 768px) and (max-width: 1025px) {
+@media (min-width: 1024px) {
   .floatButton {
     position: absolute;
     top: 11%;
@@ -58,6 +51,17 @@
     top: 20%;
     right: 13%;
   }
+} */
+
+.current-month-day h5 {
+  background-color: #feebb9;
+  padding: 3px 5px 5px;
+  margin: -8px -8px 8px -8px;
+}
+
+.today h5 {
+  background-color: #00cc66;
+  font-weight: 700;
 }
 
 a {
@@ -65,13 +69,103 @@ a {
 }
 
 .dot {
-  height: 8px;
-  width: 8px;
+  height: 6px;
+  width: 6px;
   background-color: #bf80ff;
   border-radius: 50%;
   display: inline-block;
+  margin-bottom: 1rem;
+  padding-bottom: 0;
 }
 
-.dateHeader {
+.date-header {
   position: relative;
+  margin-bottom: 1.5rem;
+  font-size: 3rem;
+  text-align: center;
+  color: #000066;
+}
+
+.days-of-week {
+  padding: .25rem;
+  background-color: #00cc99;
+  color: black;
+}
+
+.calendar-row {
+  border: 1px solid #dee2e6;
+  border-bottom: 0;
+  border-right: 0;
+}
+
+.calendar-cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-top: 0;
+  border-left: 0;
+  border: 1px solid #dee2e6;
+  padding: 0.5rem;
+  max-width: 100%;
+}
+
+.calendar-button {
+  font-size: 1.1rem;
+  font-weight: 300;
+  display: block !important;
+  width: 100% !important;
+}
+
+.day-of-week-cell {
+  max-width: 100%;
+  padding: 0.25rem;
+  text-align: center;
+}
+
+.day-of-week-title {
+  text-align: center;
+  color: black;
+  font-size: 1.1rem;
+}
+
+.calendar-event {
+  color: white !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+  margin-bottom: 0.25rem;
+  border-radius: 0.15rem;
+  font-size: 80%;
+  font-weight: 400;
+  display: block;
+  text-align: center;
+}
+
+@media (max-width: 959px) {
+  .date-header {
+    margin-bottom: auto;
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 959px) {
+  .current-month-day {
+    height: 14.2857vw;
+    background-color: #feebb9;
+  }
+  .other-month-day {
+    height: 14.2857vw;
+  }
+  .current-month-day h5 {
+    background-color: #f2d687;
+  }
+  .other-month-day h5 {
+    background-color: #80aaff;
+    padding: 3px 5px 5px;
+    margin: -8px -8px 8px -8px;
+  }
+  .today h5 {
+    background-color: #00cc66;
+  }
 }

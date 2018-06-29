@@ -6,6 +6,7 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AppRoutesModule } from './app-routes.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { CdkTableModule } from '@angular/cdk/table';
 import {
@@ -19,7 +20,10 @@ import {
   MatDialogModule,
   MatFormFieldModule,
   MatInputModule,
-  MatSelectModule
+  MatSelectModule,
+  MatToolbarModule,
+  MatIconModule,
+  MatMenuModule
 } from '@angular/material';
 import { Angular5TimePickerModule } from 'angular5-time-picker';
 
@@ -50,6 +54,7 @@ import { CalendarService } from './common/services/calendar.service';
 
 import { UserSignInGuard } from './common/guards/user-signin.guard';
 import { CalendarResolver } from './common/calendar/calendar-resolver.service';
+import { ManageUserComponent } from './common/manage-user/manage-user.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +69,8 @@ import { CalendarResolver } from './common/calendar/calendar-resolver.service';
     CalendarComponent,
     EventModalComponent,
     EventModalDialogComponent,
-    EventEditModalDialogComponent
+    EventEditModalDialogComponent,
+    ManageUserComponent
   ],
   imports: [
     BrowserModule,
@@ -80,6 +86,7 @@ import { CalendarResolver } from './common/calendar/calendar-resolver.service';
     AngularFireAuthModule,
     BrowserAnimationsModule,
     Angular5TimePickerModule,
+    FlexLayoutModule,
     CdkTableModule,
     MatAutocompleteModule,
     MatButtonModule,
@@ -91,7 +98,10 @@ import { CalendarResolver } from './common/calendar/calendar-resolver.service';
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatMenuModule
   ],
   entryComponents: [EventModalDialogComponent, EventEditModalDialogComponent],
   providers: [AuthService, EventService, CalendarService, UserSignInGuard, CalendarResolver],

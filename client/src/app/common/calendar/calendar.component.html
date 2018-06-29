@@ -1,19 +1,32 @@
-<div class="container-fluid">
+<div>
   <header>
-    <app-event-modal class="floatButton" (createCalendarEvent)="addEvent($event)"></app-event-modal>
-    <h3 class="d-none d-md-block display-4 mb-4 text-center dateHeader">
+    <!-- header with bootstrap -->
+    <!-- <h3 class="d-none d-md-block display-4 mb-4 text-center date-header">
       <small><a (click)="preMonth()"><i class="fa fa-chevron-left" aria-hidden="true"></i></a></small>
       &nbsp; {{ currentViewMonthSchedule.month }} {{ currentViewYear }} &nbsp;
       <small><a (click)="nextMonth()"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></small>
     </h3>
-    <h4 class="d-block d-md-none text-center dateHeader">
+    <h4 class="d-block d-md-none text-center date-header">
+      <small><a (click)="preMonth()"><i class="fa fa-chevron-left" aria-hidden="true"></i></a></small>
+      &nbsp; {{ currentViewMonthSchedule.month }} {{ currentViewYear }} &nbsp;
+      <small><a (click)="nextMonth()"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></small>
+    </h4> -->
+
+    <!-- header with angular flex layout -->
+    <h3 class="date-header" fxShow.lt-md="false" fxShow.md="true">
+      <small><a (click)="preMonth()"><i class="fa fa-chevron-left" aria-hidden="true"></i></a></small>
+      &nbsp; {{ currentViewMonthSchedule.month }} {{ currentViewYear }} &nbsp;
+      <small><a (click)="nextMonth()"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></small>
+    </h3>
+    <h4 class="date-header" fxShow="false" fxShow.lt-md="true">
       <small><a (click)="preMonth()"><i class="fa fa-chevron-left" aria-hidden="true"></i></a></small>
       &nbsp; {{ currentViewMonthSchedule.month }} {{ currentViewYear }} &nbsp;
       <small><a (click)="nextMonth()"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></small>
     </h4>
-    <!-- <button mat-raised-button (click)="addCalendar()">Add Calendar</button> -->
+    <app-event-modal (createCalendarEvent)="addEvent($event)"></app-event-modal>
     <hr>
-    <div class="row d-none d-md-flex p-1 bg-info text-black">
+    <!-- header with bootstrap -->
+    <!-- <div class="row d-none d-md-flex p-1 bg-info text-black">
       <h5 class="col-sm p-1 text-center">Sunday</h5>
       <h5 class="col-sm p-1 text-center">Monday</h5>
       <h5 class="col-sm p-1 text-center">Tuesday</h5>
@@ -21,33 +34,91 @@
       <h5 class="col-sm p-1 text-center">Thursday</h5>
       <h5 class="col-sm p-1 text-center">Friday</h5>
       <h5 class="col-sm p-1 text-center">Saturday</h5>
+    </div> -->
+
+    <!-- header with angular flex layout -->
+    <div class="days-of-week" fxHide.lt-md="true" fxLayout.md="row">
+      <h5 class="day-of-week-cell" fxFlex="1 0 0">Sunday</h5>
+      <h5 class="day-of-week-cell" fxFlex="1 0 0">Monday</h5>
+      <h5 class="day-of-week-cell" fxFlex="1 0 0">Tuesday</h5>
+      <h5 class="day-of-week-cell" fxFlex="1 0 0">Wednesday</h5>
+      <h5 class="day-of-week-cell" fxFlex="1 0 0">Thursday</h5>
+      <h5 class="day-of-week-cell" fxFlex="1 0 0">Friday</h5>
+      <h5 class="day-of-week-cell" fxFlex="1 0 0">Saturday</h5>
     </div>
   </header>
 
-  <div class="row border border-right-0 border-bottom-0" *ngFor="let weekSchedule of currentMonthView">
+  <!-- calendar with angular flex layout -->
+  <!-- set the weekSchedule to row when it's big screen, to column if it's a tablet or phone -->
+  <!-- loop through currentMonthView to get weekSchedules and loop through weekSchedule to get daySchedules -->
+  <!-- each weekSchedule is one row of daySchedules, each daySchedule is one cell -->
+  <div class="calendar-row" fxLayout.md="row" fxLayout.lt-md="column" *ngFor="let weekSchedule of currentMonthView">
+    <!-- check if the cell belongs to the current month and apply css effects based on that -->
+    <!-- set flex grow to 1, shrink to 0, basis to 0 -->
+    <!-- daySchedules of pre and next monthes will not show if screen size is smaller than md -->
+    <!-- click to add new event if there is none or view existing events -->
+    <a class="calendar-cell" [ngClass]="{'current-month-day': isCurrentMonth(daySchedule.month), 'other-month-day': !isCurrentMonth(daySchedule.month), 'today': daySchedule.day == date.getDate() && daySchedule.month == date.getMonth()}"
+    [fxHide.lt-md]="!isCurrentMonth(daySchedule.month)" fxShow.md="true"
+    fxFlex.md="1 0 0" *ngFor="let daySchedule of weekSchedule" (click)="openDialog(daySchedule)">
+      <!-- set up title for daySchedule and center the dayOfWeek value -->
+      <h5 fxLayout="row" fxLayoutAlign="center">
+        <span fxFlex="0 0 8%">{{ daySchedule.day }}</span>
+        <span class="day-of-week-title" fxFlex="1 0 0" fxShow="false" fxShow.lt-md="true">{{ daySchedule.dayOfWeek }}</span>
+        <span fxFlex="0 0 8%"></span>
+      </h5>
+      <!-- if there's no event for this day this button will show up -->
+      <button class="calendar-button" mat-raised-button color="accent" *ngIf="daySchedule.events.length == 0; else eventList">Add Event</button>
+      <!-- if there're less than 3 events for this day eventList will be displayed -->
+      <ng-template #eventList>
+        <div *ngIf="daySchedule.events.length <= 2; else eventList2">
+          <a class="calendar-event" title="{{ event.title }}" *ngFor="let event of daySchedule.events; let i = index"
+          [ngStyle]="{'background-color': event.color}">{{ event.title }}</a>
+        </div>
+        <!-- if there're more than 2 events for this day, top two events plus some dots will show up -->
+        <ng-template #eventList2>
+          <div>
+            <a class="calendar-event" title="{{ daySchedule.events[0].title }}"
+            [ngStyle]="{'background-color': daySchedule.events[0].color}">{{ daySchedule.events[0].title }}</a>
+            <a class="calendar-event" title="{{ daySchedule.events[1].title }}"
+            [ngStyle]="{'background-color': daySchedule.events[1].color}">{{ daySchedule.events[1].title }}</a>
+            <div class="row">
+              <a fxFlexOffset.md="35%" fxFlexOffset.sm="3%" fxFlexOffset.lt-sm="5%" title="Click to see more events">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </a>
+            </div>
+          </div>
+        </ng-template>
+      </ng-template>
+    </a>
+  </div>
+
+  <!-- calendar with bootstrap -->
+  <!-- <div class="row border border-right-0 border-bottom-0" *ngFor="let weekSchedule of currentMonthView">
       <a class="day col-md p-2 border border-left-0 border-top-0 text-truncate"
-      [ngClass]="{'current': daySchedule.month == currentMonth, 'd-none': daySchedule.month != currentMonth, 'd-md-block': daySchedule.month != currentMonth}"
+      [ngClass]="{'current-month-cell': daySchedule.month == currentMonth, 'd-none': daySchedule.month != currentMonth, 'd-md-block': daySchedule.month != currentMonth}"
       *ngFor="let daySchedule of weekSchedule" (click)="openDialog(daySchedule)">
         <h5 class="row align-items-center">
           <span class="date col-1">{{ daySchedule.day }}</span>
           <small class="col d-md-none text-center text-muted">{{ daySchedule.dayOfWeek }}</small>
           <span class="col-1"></span>
         </h5>
-        <!-- <p class="d-md-none" *ngIf="daySchedule.events.length == 0">no event</p> -->
-        <button mat-raised-button *ngIf="daySchedule.events.length == 0; else eventList">Add Event</button>
+        <button mat-raised-button color="primary" *ngIf="daySchedule.events.length == 0; else eventList">Add Event</button>
         <ng-template #eventList>
           <div *ngIf="daySchedule.events.length <= 2; else eventList2">
-            <a class="event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small text-white calEvent"
+            <a class="event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small text-white"
             title="{{ event.title }}" *ngFor="let event of daySchedule.events; let i = index"
             [ngStyle]="{'background-color': event.color}">{{ event.title }}</a>
           </div>
 
           <ng-template #eventList2>
             <div>
-              <a class="event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small text-white calEvent"
+              <a class="event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small text-white"
               title="{{ daySchedule.events[0].title }}"
               [ngStyle]="{'background-color': daySchedule.events[0].color}">{{ daySchedule.events[0].title }}</a>
-              <a class="event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small text-white calEvent"
+              <a class="event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small text-white"
               title="{{ daySchedule.events[1].title }}"
               [ngStyle]="{'background-color': daySchedule.events[1].color}">{{ daySchedule.events[1].title }}</a>
               <div class="row">
@@ -61,6 +132,5 @@
         </ng-template>
       </a>
       <div class="w-100"></div>
-  </div>
-
+  </div> -->
 </div>

@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Inject } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { CalendarEvent } from '../schedule.model';
+import { CalendarEvent } from '../../models/schedule.model';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
@@ -29,14 +29,17 @@ export class EventModalComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(event => {
       console.log('in afterclosed, new event is: ', event);
-      this.createCalendarEvent.emit(event);
+      if(event != null && event != undefined) {
+        this.createCalendarEvent.emit(event);
+      }
     });
   }
 }
 
 @Component({
   selector: 'app-event-modal-dialog',
-  templateUrl: 'event-modal-dialog.component.html',
+  templateUrl: './event-modal-dialog.component.html',
+  styleUrls: ['./event-modal-dialog.component.css']
 })
 export class EventModalDialogComponent {
 

@@ -15,7 +15,11 @@ router.post('/event', routeCtrl.addEvent);
 router.get('/calendar/:currentYear', routeCtrl.getCalendar);
 
 // router.get('/profile', passport.authenticate('jwt', {session:false}), routeCtrl.authenticate);
-router.get('/profile', routeCtrl.authenticate);
+router.get('/user/:email', routeCtrl.getUser);
+
+router.get('/users', routeCtrl.getUsers);
+
+router.put('/user', routeCtrl.updateUser);
 
 router.delete('/event/:year/:month/:day/:eventIndex', routeCtrl.deleteEvent);
 
