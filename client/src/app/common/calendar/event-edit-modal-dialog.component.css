@@ -6,6 +6,11 @@
 /* .date is for aligning 3 date fields in one row */
 .modal-container > .date {
   width: 32%;
+  padding-top: 2vh;
+}
+
+.modal-container > .color {
+  padding-top: 2vh;
 }
 
 textarea {

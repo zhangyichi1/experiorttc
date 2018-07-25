@@ -35,8 +35,16 @@ export class ProfileComponent implements OnInit {
 
     this.initEmail = this.user.email;
     this.initUsername = this.user.username;
-    this.initAddress = this.user.address;
-    this.initPhone = this.user.phone;
+    if(this.user.address != null && this.user.address != undefined) {
+      this.initAddress = this.user.address;
+    }else {
+      this.initAddress = '';
+    }
+    if(this.user.address != null && this.user.address != undefined) {
+      this.initPhone = this.user.phone;
+    }else {
+      this.initPhone = '';
+    }
 
     this.currEmail = this.initEmail;
     this.currUsername = this.initUsername;

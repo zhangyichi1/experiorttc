@@ -3,7 +3,7 @@ import { DaySchedule, MonthSchedule, YearSchedule, CalendarEvent } from '../mode
 import { CalendarService } from '../services/calendar.service';
 import { EventService } from '../services/event.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { NgForm } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { FlashMessagesService } from 'angular2-flash-messages';
 import { ActivatedRoute, Data } from '@angular/router';
 
@@ -47,7 +47,7 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit() {
 
-    this. date = new Date();
+    this.date = new Date();
     if(this.calendarService.checkYearSchedules()) {
       console.log('11111111');
       this.currentYearSchedule = this.calendarService.getCurrentYearSchedule();
@@ -437,6 +437,9 @@ export class CalendarComponent implements OnInit {
       //call calendarService's addEvent method to complete the addition, if success set specified
       //daySchedule to updatedDaySchedule and reset the view
       this.calendarService.addEvent(event, year, month, day).subscribe((data) => {
+      if(data.status == 401) {
+        this.flashMessages.show('Please sign in to add calendar event!', { cssClass: 'alert-danger', timeout: 5000 });
+      }else {
         console.log('in addEvent data is: ', data);
         if(data.success) {
           if(year == this.currentYearSchedule.year) {
@@ -448,7 +451,7 @@ export class CalendarComponent implements OnInit {
         }else {
           this.flashMessages.show(data.message, { cssClass: 'alert-danger', timeout: 5000 });
         }
-      });
+      }});
     }else {
       console.log('in addEvent event is NULL!');
     }
@@ -483,9 +486,6 @@ export class CalendarComponent implements OnInit {
 })
 export class EventEditModalDialogComponent {
 
-  // eventForm: FormGroup;
-
-
   colorOptions = [
     { value: 'red', viewValue: 'red' },
     { value: 'violet', viewValue: 'violet' },
@@ -499,31 +499,31 @@ export class EventEditModalDialogComponent {
 
   minOptions = []
 
-  // titles: string[] = [];
-  // dates: Date[] = [];
-  // descriptions: string[] = [];
-  // colors: string[] = [];
   events: any[] = [];
   editMode: boolean;
-  endingDateDisabled: boolean;
+  // endingDateDisabled: boolean;
   minStartingDate: any;
   minStartingHour: number;
   minStartingMin: number;
   minEndingDate: any;
 
-  startingDate: any;
-  startingHour: number;
-  startingMin: number;
-  endingDate: any;
-  endingHour: number;
-  endingMin: number;
+  startingDate: Date;
+  // startingHour: number;
+  // startingMin: number;
+  endingDate: Date;
+  // endingHour: number;
+  // endingMin: number;
+
+  eventForm: FormGroup;
 
   constructor(
-    public dialogRef: MatDialogRef<EventEditModalDialogComponent>,
+    private dialogRef: MatDialogRef<EventEditModalDialogComponent>,
+    private formBuilder: FormBuilder,
     private calendarService: CalendarService,
+    private flashMessages: FlashMessagesService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
       console.log('in edit dialog constructor and the data is: ', this.data);
-      this.endingDateDisabled = false;
+      // this.endingDateDisabled = false;
     }
 
   ngOnInit() {
@@ -532,12 +532,12 @@ export class EventEditModalDialogComponent {
       if(i < 10) {
         this.minOptions.push({
           value: i,
-          viewValue: ':0' + i
+          viewValue: '0' + i
         })
       }else {
         this.minOptions.push({
           value: i,
-          viewValue: ':' + i
+          viewValue: i
         })
       }
     }
@@ -546,12 +546,12 @@ export class EventEditModalDialogComponent {
       if(i < 10) {
         this.hourOptions.push({
           value: i,
-          viewValue: '0' + i + ':'
+          viewValue: '0' + i
         })
       }else {
         this.hourOptions.push({
           value: i,
-          viewValue: i + ':'
+          viewValue: i
         })
       }
     }
@@ -561,20 +561,33 @@ export class EventEditModalDialogComponent {
   initForm() {
     //preprocess the data and check to see if there's any event for this day
 
-    this.startingDate = new Date(this.data.daySchedule.month + 1 + '/' + this.data.daySchedule.day + '/' + this.data.daySchedule.year);
-    this.startingHour = 0;
-    this.startingMin = 0;
-    this.endingDate = new Date(this.data.daySchedule.month + 1 + '/' + this.data.daySchedule.day + '/' + this.data.daySchedule.year);
-    this.endingHour = 0;
-    this.endingMin = 0;
+    this.minStartingDate = new Date();
+    this.minEndingDate = new Date();
 
-    // these variables will be used in future improvements
-    // this.minStartingDate;
-    // this.minStartingHour;
-    // this.minStartingMin;
-    // this.minEndingDate;
-    // this.minEndingHour;
-    // this.minEndingMin;
+    this.startingDate = new Date(this.data.daySchedule.month + 1 + '/' + this.data.daySchedule.day + '/' + this.data.daySchedule.year);
+    // this.startingHour = 0;
+    // this.startingMin = 0;
+    this.endingDate = new Date(this.data.daySchedule.month + 1 + '/' + this.data.daySchedule.day + '/' + this.data.daySchedule.year);
+    // this.endingHour = 0;
+    // this.endingMin = 0;
+
+    if(this.startingDate.getTime() < Date.now()) {
+      this.startingDate = new Date();
+      this.endingDate = new Date();
+    }
+
+    let currentTime = new Date();
+    this.eventForm = this.formBuilder.group({
+      'title': ['', Validators.required],
+      'description': [''],
+      'startingDate': [this.startingDate, Validators.required],
+      'startingHour': [currentTime.getHours(), Validators.required],
+      'startingMin': [currentTime.getMinutes(), Validators.required],
+      'endingDate': [this.endingDate, Validators.required],
+      'endingHour': [currentTime.getHours(), Validators.required],
+      'endingMin': [currentTime.getMinutes(), Validators.required],
+      'color': ['dodgerblue', Validators.required]
+    })
 
     if(this.data.daySchedule.events.length == 0) {
       this.editMode = false;
@@ -583,7 +596,6 @@ export class EventEditModalDialogComponent {
       for(let i=0; i<this.data.daySchedule.events.length; i++) {
         let title = this.data.daySchedule.events[i].title;
         let startingTime = this.formatDate(new Date(this.data.daySchedule.events[i].startingTime));
-        // console.log("test date: ", new Date(this.data.daySchedule.events[i].startingTime)); //create a new date from iso string
         let endingTime = this.formatDate(new Date(this.data.daySchedule.events[i].endingTime));
         let description = this.data.daySchedule.events[i].description;
         let color = this.data.daySchedule.events[i].color;
@@ -595,6 +607,7 @@ export class EventEditModalDialogComponent {
           color: color
         });
       }
+      console.log('in init events are: ', this.events);
     }
   }
 
@@ -602,34 +615,54 @@ export class EventEditModalDialogComponent {
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
     let day = date.getDate();
-    let hour = date.getHours();
-    let min = date.getMinutes();
+    let hour: any = date.getHours();
+    if(hour < 10) {
+      hour = '0' + hour;
+    }
+    let min: any = date.getMinutes();
+    if(min < 10) {
+      min = '0' + min;
+    }
     return year + '-' + month + '-' + day + ' ' + hour + ':' + min;
   }
 
-  createEvent(form: NgForm) {
-    console.log('in edit eventForm issssss: ', form);
-    let startingTime = new Date(form.value.startingDate.getFullYear(),
-                                form.value.startingDate.getMonth(),
-                                form.value.startingDate.getDate(),
-                                form.value.startingHour,
-                                form.value.startingMin,
+  createEvent() {
+    console.log('eventForm is: ', this.eventForm);
+    // let startingTime = new Date(form.value.startingDate.getFullYear(),
+    //                             form.value.startingDate.getMonth(),
+    //                             form.value.startingDate.getDate(),
+    //                             form.value.startingHour,
+    //                             form.value.startingMin,
+    //                             0);
+    // let endingTime = new Date(form.value.endingDate.getFullYear(),
+    //                           form.value.endingDate.getMonth(),
+    //                           form.value.endingDate.getDate(),
+    //                           form.value.endingHour,
+    //                           form.value.endingMin,
+    //                           0);
+    let startingTime = new Date(this.eventForm.value.startingDate.getFullYear(),
+                                this.eventForm.value.startingDate.getMonth(),
+                                this.eventForm.value.startingDate.getDate(),
+                                this.eventForm.value.startingHour,
+                                this.eventForm.value.startingMin,
                                 0);
-    let endingTime = new Date(form.value.endingDate.getFullYear(),
-                              form.value.endingDate.getMonth(),
-                              form.value.endingDate.getDate(),
-                              form.value.endingHour,
-                              form.value.endingMin,
+    let endingTime = new Date(this.eventForm.value.endingDate.getFullYear(),
+                              this.eventForm.value.endingDate.getMonth(),
+                              this.eventForm.value.endingDate.getDate(),
+                              this.eventForm.value.endingHour,
+                              this.eventForm.value.endingMin,
                               0);
-    const newEvent = new CalendarEvent(form.value.title,
+    // const newEvent = new CalendarEvent(form.value.title,
+    //                  startingTime, endingTime,
+    //                  form.value.description, form.value.color);
+    const newEvent = new CalendarEvent(this.eventForm.value.title,
                      startingTime, endingTime,
-                     form.value.description, form.value.color);
+                     this.eventForm.value.description, this.eventForm.value.color);
     this.dialogRef.close(newEvent);
   }
 
   onRemove(event, eventIndex) {
-    console.log('event is: ', event);
-    console.log("after split: ", event.startingTime.split(" ")[0].split("-"));
+    console.log('beginning events are: ', this.events);
     let timeParams = event.startingTime.split(" ")[0].split("-");
     let year = Number(timeParams[0]);
     let month = Number(timeParams[1]) - 1;
@@ -637,11 +670,14 @@ export class EventEditModalDialogComponent {
 
     this.calendarService.deleteEvent(year, month, day, eventIndex).subscribe((data) => {
       console.log("data is: ", data);
-      if(data.success) {
-        this.data.daySchedule.events.splice(eventIndex, 1);
-        this.events.splice(eventIndex, 1);
-        if(this.events.length == 0) {
-          this.editMode = false;
+      if(data.status == 401) {
+        this.flashMessages.show('Please sign in to remove calendar event!', { cssClass: 'alert-danger', timeout: 5000 });
+      }else {
+        if(data.success) {
+          this.events.splice(eventIndex, 1);
+          if(this.events.length == 0) {
+            this.editMode = false;
+          }
         }
       }
     })
@@ -652,26 +688,65 @@ export class EventEditModalDialogComponent {
     this.dialogRef.close(null);
   }
 
+  addEvent() {
+    this.editMode = false;
+  }
+
   checkingEndingDate() {
-    if(this.startingDate == null || this.startingDate == '' || this.startingDate == undefined) {
-      this.endingDateDisabled = true;
-      console.log('startingDate is null!!!');
+    // console.log('eventForm is: ', this.eventForm);
+    let value = this.eventForm.value;
+    if(value.startingDate == null || value.startingDate == '' || value.startingDate == undefined || this.eventForm.get('startingDate').invalid) {
+      // this.endingDateDisabled = true;
+      this.changeEndingDate(true);
     }else {
-      this.endingDateDisabled = false;
-      this.minEndingDate = this.startingDate;
-      if(this.endingDate == undefined || this.endingDate == null || this.endingDate < this.startingDate) {
-        this.endingDate = this.startingDate;
+      // this.endingDateDisabled = false;
+      this.changeEndingDate(false);
+      this.minEndingDate = value.startingDate;
+      if(value.endingDate == undefined || value.endingDate == null || value.endingDate < value.startingDate || this.eventForm.get('endingDate').invalid) {
+        // value.endingDate = value.startingDate;
+        this.eventForm.patchValue({'endingDate': value.startingDate});
       }
-      if(this.endingDate.getTime() == this.startingDate.getTime()) {
-        if(this.endingHour < this.startingHour) {
-          this.endingHour = this.startingHour;
-        }else if(this.endingHour == this.startingHour) {
-          if(this.endingMin < this.startingMin) {
-            this.endingMin = this.startingMin;
+      // if(value.endingDate.getTime() == value.startingDate.getTime()) {
+      if(this.eventForm.get('endingDate').value.getTime() <= this.eventForm.get('startingDate').value.getTime()) {
+
+        if(value.endingHour < value.startingHour) {
+          // value.endingHour = value.startingHour;
+          this.eventForm.patchValue({'endingHour': value.startingHour});
+        }else if(value.endingHour == value.startingHour) {
+          if(value.endingMin < value.startingMin) {
+            // value.endingMin = value.startingMin;
+            this.eventForm.patchValue({'endingMin': value.startingMin});
           }
         }
       }
     }
   }
 
+  changeEndingDate(bool: boolean) {
+    if(bool) {
+      this.eventForm.get('startingHour').disable();
+      this.eventForm.get('startingMin').disable();
+      this.eventForm.get('endingDate').disable();
+      this.eventForm.get('endingHour').disable();
+      this.eventForm.get('endingMin').disable();
+    }else {
+      this.eventForm.get('startingHour').enable();
+      this.eventForm.get('startingMin').enable();
+      this.eventForm.get('endingDate').enable();
+      this.eventForm.get('endingHour').enable();
+      this.eventForm.get('endingMin').enable();
+    }
+  }
+
+  getStartingDateErrorMessage() {
+    return this.eventForm.get('startingDate').hasError('matDatepickerParse') ? "Please enter a valid date" :
+      this.eventForm.get('startingDate').hasError('required') ? "Starting date is required" :
+      this.eventForm.get('startingDate').hasError('matDatepickerMin') ? "Please select a date greater than or equal to today" : "";
+  }
+
+  getEndingDateErrorMessage() {
+    return this.eventForm.get('endingDate').hasError('matDatepickerParse') ? "Please enter a valid date" :
+      this.eventForm.get('endingDate').hasError('required') ? "Ending date is required" :
+      this.eventForm.get('endingDate').hasError('matDatepickerMin') ? "Please select a date greater than or equal to starting date" : "";
+  }
 }

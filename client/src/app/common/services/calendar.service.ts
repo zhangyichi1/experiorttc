@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Response } from '@angular/http';
-import { map, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { DaySchedule, MonthSchedule, YearSchedule, CalendarEvent } from '../models/schedule.model';
 import { EventService } from './event.service';
-import { Observable } from 'rxjs/observable';
+import { AuthService } from './auth.service';
+import { Observable } from 'rxjs';
 
 
 const monthes = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -15,6 +16,7 @@ const httpOptions = {
 };
 
 interface UpdatedDaySchedule {
+  status: number,
   success: boolean,
   message: string,
   updatedDaySchedule: DaySchedule
@@ -29,11 +31,11 @@ export class CalendarService {
   nextYearSchedule: any;
 
   constructor(private http: HttpClient,
-              private eventService: EventService) {
+              private eventService: EventService,
+              private authService: AuthService) {
 
     this.yearSchedules = [];
     this.date = new Date();
-
     // this.generateYearSchedules();
     // this.yearSchedules = [this.currentYearSchedule, this.nextYearSchedule];
   }
@@ -74,6 +76,7 @@ export class CalendarService {
 
   addEvent(event, year, month, day): Observable<UpdatedDaySchedule> {
     console.log('event is: ', event);
+    this.appendToken();
     return this.http.post<UpdatedDaySchedule>('http://localhost:3000/api/event',
       {
         year: year,
@@ -91,11 +94,16 @@ export class CalendarService {
           }
         }
         return res;
+      }), catchError((err) => {
+        console.log('err is: ', err);
+        return Observable.of(err);
       }));
   }
 
   deleteEvent(year, month, day, eventIndex): Observable<UpdatedDaySchedule> {
     // console.log("url is: ", 'http://localhost:3000/api/event/' + year + '/' + month + '/' + day + '/' + eventIndex);
+    this.appendToken();
+    console.log('httpOptions is: ', httpOptions);
     return this.http.delete<UpdatedDaySchedule>('http://localhost:3000/api/event/' + year + '/' + month + '/' + day + '/' + eventIndex, httpOptions)
     .pipe(tap((res: UpdatedDaySchedule) => {
       console.log('in deleteEvent res is: ', res);
@@ -107,7 +115,27 @@ export class CalendarService {
         }
       }
       return res;
+    }), catchError((err) => {
+      console.log('err is: ', err);
+      return Observable.of(err);
     }));
+  }
+
+  appendToken() {
+    if(this.authService.isSignedIn()) {
+      if(httpOptions.headers.has('Authorization')) {
+        httpOptions.headers = httpOptions.headers.delete('Authorization');
+        httpOptions.headers = httpOptions.headers.append('Authorization', this.authService.loadToken());
+        console.log('httpOptions is: ', httpOptions);
+      }else {
+        httpOptions.headers = httpOptions.headers.append('Authorization', this.authService.loadToken());
+        console.log('httpOptions is: ', httpOptions);
+      }
+    }else {
+      if(httpOptions.headers.has('Authorization')) {
+        httpOptions.headers = httpOptions.headers.delete('Authorization');
+      }
+    }
   }
 
 

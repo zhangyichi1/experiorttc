@@ -23,7 +23,11 @@ import {
   MatSelectModule,
   MatToolbarModule,
   MatIconModule,
-  MatMenuModule
+  MatMenuModule,
+  MatTableModule,
+  MatSliderModule,
+  MatPaginatorModule,
+  MatSortModule
 } from '@angular/material';
 import { Angular5TimePickerModule } from 'angular5-time-picker';
 
@@ -54,7 +58,9 @@ import { CalendarService } from './common/services/calendar.service';
 
 import { UserSignInGuard } from './common/guards/user-signin.guard';
 import { CalendarResolver } from './common/calendar/calendar-resolver.service';
+import { ManageUserResolver } from './common/manage-user/manage-user-resolver.service';
 import { ManageUserComponent } from './common/manage-user/manage-user.component';
+import { ManageUserConfirmDialogComponent } from './common/manage-user/manage-user-confirm-dialog/manage-user-confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +76,8 @@ import { ManageUserComponent } from './common/manage-user/manage-user.component'
     EventModalComponent,
     EventModalDialogComponent,
     EventEditModalDialogComponent,
-    ManageUserComponent
+    ManageUserComponent,
+    ManageUserConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -101,10 +108,14 @@ import { ManageUserComponent } from './common/manage-user/manage-user.component'
     MatSelectModule,
     MatToolbarModule,
     MatIconModule,
-    MatMenuModule
+    MatMenuModule,
+    MatTableModule,
+    MatSliderModule,
+    MatPaginatorModule,
+    MatSortModule
   ],
-  entryComponents: [EventModalDialogComponent, EventEditModalDialogComponent],
-  providers: [AuthService, EventService, CalendarService, UserSignInGuard, CalendarResolver],
+  entryComponents: [EventModalDialogComponent, EventEditModalDialogComponent, ManageUserConfirmDialogComponent],
+  providers: [AuthService, EventService, CalendarService, UserSignInGuard, CalendarResolver, ManageUserResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -2,17 +2,19 @@
   <div fxFlexOffset.gt-xs="25%" fxFlex.gt-xs="0 0 50%" fxFlex.xs="1 0 0">
     <fieldset>
       <legend>Sign In</legend>
-      <form #f="ngForm">
+      <form [formGroup]="signInForm" (ngSubmit)="signIn()">
         <mat-form-field class="form-field">
-          <input matInput pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$" type="email" placeholder="email" name="email" [(ngModel)]="email" required>
+          <input matInput type="email" placeholder="email*" formControlName="email">
+          <mat-error *ngIf="signInForm.get('email').invalid && signInForm.get('email').touched">{{ getEmailErrorMessage() }}</mat-error>
         </mat-form-field>
         <br>
         <mat-form-field class="form-field">
-          <input matInput type="password" placeholder="password" name="password" [(ngModel)]="password" minlength="4" required>
+          <input matInput type="password" placeholder="password*" formControlName="password">
+          <mat-error *ngIf="signInForm.get('password').invalid && signInForm.get('password').touched">Password is required</mat-error>
         </mat-form-field>
         <br>
         <div mat-dialog-actions>
-          <button class="signin-button" mat-raised-button color="primary" (click)="signIn(f)" [disabled]="!f.valid">Sign In</button>
+          <button class="signin-button" mat-raised-button color="primary" type="submit" [disabled]="signInForm.invalid">Sign In</button>
           <br>
           <button class="signin-button" mat-raised-button color="accent" (click)="signInWithGoogle()">
             <i class="fa fa-google-plus" aria-hidden="true"></i> Sign In With Gmail

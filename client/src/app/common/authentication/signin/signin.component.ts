@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, HostListener } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { EventService } from '../../services/event.service';
 import { FlashMessagesService } from 'angular2-flash-messages';
@@ -13,23 +13,30 @@ import { User } from '../../models/user.model';
 })
 export class SigninComponent implements OnInit {
 
-  email: string;
-  password: string;
+  signInForm: FormGroup;
 
   constructor(private authService: AuthService,
               private eventService: EventService,
               private flashMessages: FlashMessagesService,
-              private router: Router) { }
+              private router: Router,
+              private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    this.email = '';
-    this.password = '';
+    this.signInForm = this.formBuilder.group({
+      'email': [null, [Validators.required, Validators.email]],
+      'password': [null, Validators.required]
+    })
   }
 
-  signIn(form: NgForm) {
+  getEmailErrorMessage() {
+    return this.signInForm.get('email').hasError('required') ? 'Email is required' :
+      this.signInForm.get('email').hasError('email') ? 'Please enter a valid email' : '';
+  }
+
+  signIn() {
     const user = {
-      email: form.value.email,
-      password: form.value.password
+      'email': this.signInForm.value.email,
+      'password': this.signInForm.value.password
     }
 
     if(!this.authService.validateSignIn(user)) {

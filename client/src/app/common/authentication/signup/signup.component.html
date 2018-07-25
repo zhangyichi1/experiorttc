@@ -2,29 +2,34 @@
   <div fxFlexOffset.gt-xs="25%" fxFlex.gt-xs="0 0 50%" fxFlex.xs="1 0 0">
     <fieldset>
       <legend>Sign Up</legend>
-      <form #f="ngForm">
+      <form [formGroup]="signUpForm" (ngSubmit)="signUp()">
         <mat-form-field class="form-field">
-          <input matInput pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$" type="email" placeholder="email" name="email" [(ngModel)]="email" required>
+          <input matInput type="email" placeholder="email*" formControlName="email">
+          <mat-error *ngIf="signUpForm.get('email').invalid && signUpForm.get('email').touched">{{ getEmailErrorMessage() }}</mat-error>
         </mat-form-field>
         <br>
         <mat-form-field class="form-field">
-          <input matInput type="text" placeholder="username needs to be at least 4 characters" name="username" [(ngModel)]="username" minlength="4" required>
+          <input matInput type="text" placeholder="username*" formControlName="username">
+          <mat-error *ngIf="signUpForm.get('username').invalid && signUpForm.get('username').touched">{{ getUsernameErrorMessage() }}</mat-error>
         </mat-form-field>
         <br>
-        <mat-form-field class="form-field" name="password">
-          <input matInput type="password" placeholder="password needs to be at least 4 characters" name="password" [(ngModel)]="password" minlength="4" required>
+        <mat-form-field class="form-field" name="password*">
+          <input matInput type="password" placeholder="password" formControlName="password">
+          <mat-error *ngIf="signUpForm.get('password').invalid && signUpForm.get('password').touched">{{ getPasswordErrorMessage() }}</mat-error>
         </mat-form-field>
         <br>
         <mat-form-field class="form-field">
-          <input matInput type="text" placeholder="address" name="address" [(ngModel)]="address">
+          <input matInput type="text" placeholder="address" formControlName="address">
         </mat-form-field>
         <br>
         <mat-form-field class="form-field">
-          <input matInput type="text" placeholder="(111)-111-1111" name="phone" [(ngModel)]="phone">
+          <input matInput type="text" placeholder="(111)-111-1111" formControlName="phone">
         </mat-form-field>
         <br>
         <div mat-dialog-actions>
-          <button class="signup-button" mat-raised-button color="primary" (click)="signUp(f)" [disabled]="!f.valid">Sign Up</button>
+          <button class="signup-button" mat-raised-button color="primary" type="submit" [disabled]="signUpForm.invalid">Sign Up</button>
+          <br>
+          <p>Already have an account? Please <a href="" [routerLink]="['/authentication/signin']">Sign In</a> </p>
         </div>
       </form>
     </fieldset>

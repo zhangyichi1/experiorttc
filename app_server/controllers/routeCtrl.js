@@ -120,9 +120,48 @@ module.exports.getUser = function(req, res) {
 };
 
 module.exports.getUsers = function(req, res) {
-  res.json({
-    something: 'something'
-  })
+  let allUsers = [];
+  User.find({}, (err, users) => {
+    if(err) {
+      console.log('1111');
+      res.json({ success: false, message: err });
+    }else if(!users) {
+      console.log('2222');
+      res.json({ success: false, message: 'No user found' });
+    }else {
+      console.log('users are: ', users);
+      users.forEach((ele) => {
+        let user = new Object();
+        user.email = ele.email;
+        user.username = ele.username;
+        user.address = ele.address;
+        user.phone = ele.phone;
+        user.roles = ele.roles;
+        allUsers.push(user);
+      });
+      res.json({ success: true, users: allUsers });
+    }
+  });
+};
+
+module.exports.deleteUser = function(req, res) {
+  let email = req.params.email;
+  if(email == null || email == undefined || email == '') {
+    console.log('email is: ', email);
+    res.json({ success: false, message: 'Email is required' });
+  }else {
+    User.deleteOne({ email: email }, (err, result) => {
+      if(err) {
+        res.json({ success: false, message: err });
+      }
+      if(result.ok === 1 && result.n >= 1) {
+        res.json({ success: true, message: 'Account of ' + email + ' has been deleted' });
+      }else {
+        console.log('result is: ', result);
+        res.json({ success: false, message: 'Fail to delete the account of ' + email });
+      }
+    });
+  }
 }
 
 module.exports.updateUser = function(req, res) {
@@ -135,7 +174,7 @@ module.exports.updateUser = function(req, res) {
   }else {
     User.findOne({ email: body.email }, (err, user) => {
       if(err) {
-        res.json({ success: false, message: err })
+        res.json({ success: false, message: err });
       }
       if(!user) {
         res.json({ success: false, message: 'User not found' });
@@ -184,7 +223,7 @@ module.exports.getCalendar = function(req, res) {
   if(req.params.currentYear == undefined || req.params.currentYear == '' || req.params.currentYear == null) {
     res.json({ success: false, message: 'calendar information is incomplete!' });
   }else if(isNaN(req.params.currentYear)) {
-    res.json({ success: false, message: 'year needs to be a number' })
+    res.json({ success: false, message: 'year needs to be a number' });
   }else {
     let yearSchedules = new Object();
     const currentYear = parseInt(req.params.currentYear, 10);
@@ -207,7 +246,7 @@ module.exports.getCalendar = function(req, res) {
           }else {
             yearSchedules.yearSchedules.push(nextYearSchedule);
             // console.log('yearSchedules is: ', yearSchedules)
-            res.json({ success: true, yearSchedules: yearSchedules })
+            res.json({ success: true, yearSchedules: yearSchedules });
           }
         });
       }
@@ -252,10 +291,10 @@ module.exports.deleteEvent = function(req, res) {
   if(req.params.eventIndex == undefined || req.params.eventIndex == null || req.params.month == undefined ||
      req.params.month == null || req.params.day == undefined || req.params.day == null ||
      req.params.year == null || req.params.day == undefined) {
-    console.log('req.params.eventIndex is: ', req.params.eventIndex);
-    console.log('req.params.year is: ', req.params.year);
-    console.log('req.params.month is: ', req.params.month);
-    console.log('req.params.day is: ', req.params.day);
+    // console.log('req.params.eventIndex is: ', req.params.eventIndex);
+    // console.log('req.params.year is: ', req.params.year);
+    // console.log('req.params.month is: ', req.params.month);
+    // console.log('req.params.day is: ', req.params.day);
     res.json({ success: false, message: 'please send the event id, month, and day' });
   }else {
     YearSchedule.findOne({ year: req.params.year }, (err, yearSchedule) => {

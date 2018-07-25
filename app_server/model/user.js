@@ -84,3 +84,24 @@ module.exports.comparePassword = function(password, hash, callback) {
     }
   });
 };
+
+module.exports.isAdmin = function(roles, callback) {
+  // roles.forEach((ele) => {
+  //   if(ele == 'admin') {
+  //     callback(null, true);
+  //     return;
+  //   }
+  // });
+  // callback(null, false);
+  let flag = false;
+  roles.forEach((ele) => {
+    if(ele == 'admin') {
+      flag = true;
+    }
+  });
+  if(flag) {
+    callback(null, true);
+  }else {
+    callback(null, false);
+  }
+}

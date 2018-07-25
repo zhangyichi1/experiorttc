@@ -1,15 +1,25 @@
 <h1 mat-dialog-title>Please fill out the form</h1>
 <div mat-dialog-content>
-  <form class="modal-container" #f="ngForm">
-    <mat-form-field class="full-width">
+  <!-- <form class="modal-container" #f="ngForm"> -->
+  <form class="modal-container" [formGroup]="eventForm" (ngSubmit)="createEvent()">
+    <!-- <mat-form-field class="full-width">
       <input matInput placeholder="title" name="title" [(ngModel)]="title" required>
     </mat-form-field>
     <mat-form-field class="full-width">
       <textarea matInput placeholder="description" name="description" [(ngModel)]="description"></textarea>
+    </mat-form-field> -->
+    <mat-form-field class="full-width" hintLabel="Max 30 characters">
+      <input matInput placeholder="title*" maxlength="30" formControlName="title">
+      <mat-hint align="end">{{ eventForm.value.title.length }}/30</mat-hint>
+      <mat-error *ngIf="eventForm.get('title').invalid && eventForm.get('title').touched">Title is required for new Event</mat-error>
+    </mat-form-field>
+    <mat-form-field class="full-width" hintLabel="Max 150 characters">
+      <textarea matInput placeholder="description" maxlength="150" formControlName="description"></textarea>
+      <mat-hint align="end">{{ eventForm.value.description.length }}/150</mat-hint>
     </mat-form-field>
     <br>
-    <mat-form-field class="date">
-      <input matInput [matDatepicker]="startpicker" placeholder="Choose a date from toggle" name="startingDate" [(ngModel)]="startingDate"
+    <!-- <mat-form-field class="date">
+      <input matInput [matDatepicker]="startpicker" placeholder="starting date" name="startingDate" [(ngModel)]="startingDate"
        [min]="minStartingDate" (dateInput)="checkingEndingDate()" required>
       <mat-datepicker-toggle matSuffix [for]="startpicker" (dateInput)="checkingEndingDate()"></mat-datepicker-toggle>
       <mat-datepicker #startpicker disabled="false" (dateInput)="checkingEndingDate()"></mat-datepicker>
@@ -29,9 +39,31 @@
           {{ min.viewValue }}
         </mat-option>
       </mat-select>
+    </mat-form-field> -->
+    <mat-form-field class="date">
+      <input matInput [matDatepicker]="startpicker" placeholder="starting date*" formControlName="startingDate"
+       [min]="minStartingDate" (dateInput)="checkingEndingDate()">
+      <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
+      <mat-datepicker #startpicker></mat-datepicker>
+      <mat-error *ngIf="eventForm.get('startingDate').invalid && eventForm.get('startingDate').touched">{{ getStartingDateErrorMessage() }}</mat-error>
     </mat-form-field>
     <mat-form-field class="date">
-      <input matInput [matDatepicker]="endingPicker" placeholder="Choose a date from toggle" name="endingDate" [(ngModel)]="endingDate"
+      <mat-select placeholder="starting hour" formControlName="startingHour" (selectionChange)="checkingEndingDate()">
+        <mat-option *ngFor="let hour of hourOptions" [value]="hour.value">
+          {{ hour.viewValue }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="date">
+      <mat-select placeholder="starting minute" formControlName="startingMin" (selectionChange)="checkingEndingDate()">
+        <mat-option *ngFor="let min of minOptions" [value]="min.value">
+          {{ min.viewValue }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- <mat-form-field class="date">
+      <input matInput [matDatepicker]="endingPicker" placeholder="ending date" name="endingDate" [(ngModel)]="endingDate"
       [min]="minEndingDate" (dateInput)="checkingEndingDate()" [disabled]="endingDateDisabled" required>
       <mat-datepicker-toggle matSuffix [for]="endingPicker"></mat-datepicker-toggle>
       <mat-datepicker #endingPicker [disabled]="endingDateDisabled"></mat-datepicker>
@@ -51,17 +83,48 @@
           {{ min.viewValue }}
         </mat-option>
       </mat-select>
+    </mat-form-field> -->
+    <mat-form-field class="date">
+      <input matInput [matDatepicker]="endingPicker" placeholder="ending date*" formControlName="endingDate"
+      [min]="minEndingDate" (dateInput)="checkingEndingDate()">
+      <mat-datepicker-toggle matSuffix [for]="endingPicker"></mat-datepicker-toggle>
+      <mat-datepicker #endingPicker></mat-datepicker>
+      <mat-error *ngIf="eventForm.get('endingDate').invalid && eventForm.get('endingDate').touched">{{ getEndingDateErrorMessage() }}</mat-error>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field class="date">
+      <mat-select placeholder="ending hour" formControlName="endingHour" (selectionChange)="checkingEndingDate()">
+        <mat-option *ngFor="let hour of hourOptions" [value]="hour.value">
+          {{ hour.viewValue }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="date">
+      <mat-select placeholder="ending minute" formControlName="endingMin" (selectionChange)="checkingEndingDate()">
+        <mat-option *ngFor="let min of minOptions" [value]="min.value">
+          {{ min.viewValue }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- <mat-form-field>
       <mat-select placeholder="Pick a color" name="color" [(ngModel)]="color" required>
         <mat-option *ngFor="let color of colorOptions" [value]="color.value" [ngStyle]="{'color': color.value}">
           {{ color.viewValue }}
         </mat-option>
       </mat-select>
+    </mat-form-field> -->
+    <mat-form-field class="color">
+      <mat-select placeholder="Pick a color*" formControlName="color">
+        <mat-option *ngFor="let color of colorOptions" [value]="color.value" [ngStyle]="{'color': color.value}">
+          {{ color.viewValue }}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
-    <div mat-dialog-actions>
+    <br>
+    <div mat-dialog-actions style="float: right">
+      <button mat-raised-button type="submit" [disabled]="eventForm.invalid">Submit</button>
       <button mat-raised-button (click)="onClose()">Cancel</button>
-      <button mat-raised-button (click)="createEvent(f)" [disabled]="!f.valid">Submit</button>
+      <!-- <button mat-raised-button (click)="createEvent(f)" [disabled]="!f.valid">Submit</button> -->
     </div>
   </form>
 </div>

@@ -7,4 +7,10 @@
   font-weight: 300;
   display: block !important;
   width: 100% !important;
+  margin-top: 1vh;
+}
+
+p > a{
+  color: dodgerblue;
+  text-decoration: none;
 }

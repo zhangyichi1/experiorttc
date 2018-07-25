@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { tokenNotExpired } from 'angular2-jwt';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { firebase } from '@firebase/app';
 import { EventService } from './event.service';
-import { Observable } from 'rxjs/observable';
+import { Observable } from 'rxjs';
 import { User } from '../models/user.model';
 import { FlashMessagesService } from 'angular2-flash-messages';
 
@@ -98,22 +98,32 @@ export class AuthService {
   }
 
   getUser(email): Observable<any> {
+    this.appendToken();
     return this.http.get('http://localhost:3000/api/user/' + email, httpOptions)
       .pipe(map((res: any) => {
         return res;
+      }), catchError((err) => {
+        console.log('err is: ', err);
+        return Observable.of(err);
       }));
   }
 
   getUsers(): Observable<any[]> {
-    return this.http.get('http://localhost:3000/api/users')
+    this.appendToken();
+    return this.http.get('http://localhost:3000/api/users', httpOptions)
       .pipe(map((res: any[]) => {
         console.log('users are: ', res);
         return res;
-      }))
+      }), catchError((err) => {
+        console.log('err is: ', err);
+        return Observable.of(err);
+      }));
   }
 
   updateUser(user: User): Observable<User> {
     console.log('user is: ', user);
+    this.appendToken();
+    console.log('httpOptions is: ', httpOptions);
     return this.http.put('http://localhost:3000/api/user', user, httpOptions)
       .pipe(map((res: any) => {
         console.log('res is: ', res);
@@ -127,7 +137,24 @@ export class AuthService {
           this.flashMessages.show(res.message, { cssClass: 'alert-danger', timeout: 3000 });
           return null;
         }
-      }))
+      }), catchError((err) => {
+        console.log('err is: ', err);
+        return Observable.of(err);
+      }));
+  }
+
+  removeUser(email: string): Observable<User> {
+    console.log('email is: ', email);
+    this.appendToken();
+    console.log('httpOptions is: ', httpOptions);
+    return this.http.delete('http://localhost:3000/api/user/' + email, httpOptions)
+      .pipe(map((res: any) => {
+        console.log('res is: ', res);
+        return res;
+      }), catchError((err) => {
+        console.log('err is: ', err);
+        return Observable.of(err);
+      }));
   }
 
   getCurrentUser(): User {
@@ -142,16 +169,16 @@ export class AuthService {
   }
 
   loadToken(): string {
-    const token = localStorage.getItem('idToken');
-    return  token;
+    let token = localStorage.getItem('idToken');
+    return token;
   }
 
   loadUser(): string {
-    const user = localStorage.getItem('user');
+    let user = localStorage.getItem('user');
     return user;
   }
 
-  // check if token has expired, if yes return true
+  // check if token has expired, if yes return false
   checkTokenExp(): boolean {
     return tokenNotExpired('idToken');
   }
@@ -165,6 +192,27 @@ export class AuthService {
       console.log('user is: ', this.user);
       console.log('token is: ', this.authToken);
     });
+  }
+
+  appendToken() {
+    if(this.isSignedIn()) {
+      if(httpOptions.headers.has('Authorization')) {
+        httpOptions.headers = httpOptions.headers.delete('Authorization');
+        httpOptions.headers = httpOptions.headers.append('Authorization', this.authToken);
+        console.log('httpOptions is: ', httpOptions);
+      }else {
+        httpOptions.headers = httpOptions.headers.append('Authorization', this.authToken);
+        console.log('httpOptions is: ', httpOptions);
+      }
+    }else {
+      if(httpOptions.headers.has('Authorization')) {
+        httpOptions.headers = httpOptions.headers.delete('Authorization');
+      }
+    }
+  }
+
+  isSignedIn() {
+    return this.user != null;
   }
 
 }

@@ -8,4 +8,9 @@ textarea {
 
 .modal-container > .date {
   width: 32%;
+  padding-top: 2vh;
+}
+
+.modal-container > .color {
+  padding-top: 2vh;
 }

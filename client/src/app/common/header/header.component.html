@@ -52,6 +52,7 @@
         <mat-menu #menu="matMenu">
           <button class="button-font" mat-menu-item (click)="signOut()">Sign Out</button>
           <button class="button-font" mat-menu-item [routerLink]="['/profile']">Profile</button>
+          <button class="button-font" mat-menu-item [routerLink]="['/manageuser']">Manage</button>
         </mat-menu>
 
         <!-- <button mat-button fxShow="false" fxShow.lt-md="true" class="bars">
@@ -70,6 +71,7 @@
           <button class="button-font" mat-menu-item [routerLink]="['/authentication/signin']" *ngIf="!isSignedIn">Sign In</button>
           <button class="button-font" mat-menu-item [routerLink]="['/authentication/signup']" *ngIf="!isSignedIn">Sign Up</button>
           <button class="button-font" mat-menu-item [routerLink]="['/profile']" *ngIf="isSignedIn">Profile</button>
+          <button class="button-font" mat-menu-item [routerLink]="['/manageuser']" *ngIf="isSignedIn">Manage</button>
           <button class="button-font" mat-menu-item (click)="signOut()" *ngIf="isSignedIn">Sign Out</button>
         </mat-menu>
     </mat-toolbar-row>

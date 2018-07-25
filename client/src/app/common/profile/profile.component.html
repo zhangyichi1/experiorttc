@@ -4,7 +4,6 @@
       <legend>{{ currUsername }}</legend>
       <br>
       <form #f="ngForm">
-
         <mat-form-field class="form-field" [floatLabel]="'never'">
           <label for="currEmail">Email: </label>
           <input matInput pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$" type="email" placeholder="Email" name="currEmail"  [readonly]="!editMode" [(ngModel)]="currEmail" required>
@@ -22,7 +21,7 @@
         <br>
         <mat-form-field class="form-field" [floatLabel]="'never'">
           <label for="currPhone">Phone: </label>
-          <input matInput type="text" placeholder="(111)-111-1111" name="currPhone" [readonly]="!editMode" [(ngModel)]="currPhone">
+          <input matInput type="text" name="currPhone" [readonly]="!editMode" [(ngModel)]="currPhone">
         </mat-form-field>
         <br>
         <div mat-dialog-actions fxLayoutAlign="end">

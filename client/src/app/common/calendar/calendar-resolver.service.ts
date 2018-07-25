@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { YearSchedule, MonthSchedule, DaySchedule, CalendarEvent } from '../models/schedule.model';
-
 import { CalendarService } from '../services/calendar.service';
 
 @Injectable()
 export class CalendarResolver implements Resolve<any> {
 
-  constructor(public calendarService: CalendarService) {}
+  constructor(private calendarService: CalendarService) {}
 
   resolve() {
     if(this.calendarService.checkYearSchedules()) {
@@ -39,6 +39,9 @@ export class CalendarResolver implements Resolve<any> {
 
           console.log('in resolver after res is: ', res);
           return res;
+        }), catchError((err) => {
+          console.log('err is: ', err);
+          return Observable.of(err);
         }));
     }
   }
