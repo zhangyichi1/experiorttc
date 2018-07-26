@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+// import { AdminModule } from './manage-user/manage-user.module';
 
 import { HomeComponent } from './common/home/home.component';
 import { AuthenticationComponent } from './common/authentication/authentication.component';
@@ -8,11 +9,11 @@ import { SigninComponent } from './common/authentication//signin/signin.componen
 import { AboutComponent } from './common/about/about.component';
 import { ProfileComponent } from './common/profile/profile.component';
 import { CalendarComponent } from './common/calendar/calendar.component';
-import { ManageUserComponent } from './common/manage-user/manage-user.component';
+// import { ManageUserComponent } from './common/manage-user/manage-user.component';
 
 import { UserSignInGuard } from './common/guards/user-signin.guard';
 import { CalendarResolver } from './common/calendar/calendar-resolver.service';
-import { ManageUserResolver } from './common/manage-user/manage-user-resolver.service';
+// import { ManageUserResolver } from './common/manage-user/manage-user-resolver.service';
 
 const rootRouterConfig: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -25,7 +26,8 @@ const rootRouterConfig: Routes = [
   { path: 'about', component: AboutComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [UserSignInGuard] },
   { path: 'calendar', component: CalendarComponent, resolve: { yearSchedules: CalendarResolver } },
-  { path: 'manageuser', component: ManageUserComponent, resolve: { users: ManageUserResolver } },
+  // { path: 'manageuser', component: ManageUserComponent, resolve: { users: ManageUserResolver } },
+  { path: 'admin', loadChildren: './manage-user/admin.module#AdminModule' },
   { path: '**', redirectTo: 'home', pathMatch: 'full'}
 ];
 

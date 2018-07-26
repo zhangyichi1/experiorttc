@@ -11,7 +11,7 @@ export class ManageUserConfirmDialogComponent {
   message: string;
 
   constructor(
-    private dialogRef: MatDialogRef<ManageUserConfirmDialogComponent>,
+    public dialogRef: MatDialogRef<ManageUserConfirmDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
       console.log('in edit dialog constructor and the data is: ', this.data);
       this.message = 'Are you sure you want to permanently delete ' + this.data.username + '\'s account?';

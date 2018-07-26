@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
 import { catchError, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { User } from '../models/user.model';
-import { AuthService } from '../services/auth.service';
+import { User } from '../../common/models/user.model';
+import { AuthService } from '../../common/services/auth.service';
 import { FlashMessagesService } from 'angular2-flash-messages';
 
 @Injectable()

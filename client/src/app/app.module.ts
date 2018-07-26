@@ -58,9 +58,6 @@ import { CalendarService } from './common/services/calendar.service';
 
 import { UserSignInGuard } from './common/guards/user-signin.guard';
 import { CalendarResolver } from './common/calendar/calendar-resolver.service';
-import { ManageUserResolver } from './common/manage-user/manage-user-resolver.service';
-import { ManageUserComponent } from './common/manage-user/manage-user.component';
-import { ManageUserConfirmDialogComponent } from './common/manage-user/manage-user-confirm-dialog/manage-user-confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -75,9 +72,7 @@ import { ManageUserConfirmDialogComponent } from './common/manage-user/manage-us
     CalendarComponent,
     EventModalComponent,
     EventModalDialogComponent,
-    EventEditModalDialogComponent,
-    ManageUserComponent,
-    ManageUserConfirmDialogComponent
+    EventEditModalDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -114,8 +109,8 @@ import { ManageUserConfirmDialogComponent } from './common/manage-user/manage-us
     MatPaginatorModule,
     MatSortModule
   ],
-  entryComponents: [EventModalDialogComponent, EventEditModalDialogComponent, ManageUserConfirmDialogComponent],
-  providers: [AuthService, EventService, CalendarService, UserSignInGuard, CalendarResolver, ManageUserResolver],
+  entryComponents: [EventModalDialogComponent, EventEditModalDialogComponent],
+  providers: [AuthService, EventService, CalendarService, UserSignInGuard, CalendarResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

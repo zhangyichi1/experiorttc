@@ -30,23 +30,40 @@ interface response {
 @Injectable()
 export class AuthService {
 
-  authToken: any;
-  user: User;
-  // authState: any = null;
+  private authToken: any;
+  private user: User;
+  private isSignedIn: boolean = false;
+  private isAdmin: boolean = false;
 
   constructor(private http: HttpClient,
               public afAuth: AngularFireAuth,
               private eventService: EventService,
               private flashMessages: FlashMessagesService) {
                 if(this.checkTokenExp()) {
-                  let userJson = JSON.parse(this.loadUser());
-                  this.user = new User(userJson.email, userJson.username, userJson.address, userJson.phone, null, userJson.roles);
+                  this.user = this.loadUser();
                   this.authToken = this.loadToken();
                 }
                 else {
                   this.user = null;
                   this.authToken = null;
                 }
+
+                this.isSignedIn = this.user == null ? false : true;
+                if(this.isSignedIn) {
+                  this.isAdmin = this.user.roles.indexOf('admin') == -1 ? false : true;
+                }else {
+                  this.isAdmin = false;
+                }
+
+                this.eventService.signInEvent.subscribe((user) => {
+                  this.user = user;
+                  this.isSignedIn = true;
+                  this.isAdmin = this.user.roles.indexOf('admin') == -1 ? false : true;
+                })
+
+                this.eventService.signInExpireEvent.subscribe(() => {
+                  this.signOut();
+                })
              }
 
   validateSignUp(user): boolean {
@@ -93,6 +110,8 @@ export class AuthService {
   signOut(): Promise<any> {
     this.authToken = null;
     this.user = null;
+    this.isSignedIn = false;
+    this.isAdmin = false;
     localStorage.clear();
     return this.afAuth.auth.signOut();
   }
@@ -173,9 +192,9 @@ export class AuthService {
     return token;
   }
 
-  loadUser(): string {
-    let user = localStorage.getItem('user');
-    return user;
+  loadUser(): User {
+    let userJson = JSON.parse(localStorage.getItem('user'));
+    return new User(userJson.email, userJson.username, userJson.address, userJson.phone, null, userJson.roles);
   }
 
   // check if token has expired, if yes return false
@@ -195,7 +214,7 @@ export class AuthService {
   }
 
   appendToken() {
-    if(this.isSignedIn()) {
+    if(this.getIsSignedIn()) {
       if(httpOptions.headers.has('Authorization')) {
         httpOptions.headers = httpOptions.headers.delete('Authorization');
         httpOptions.headers = httpOptions.headers.append('Authorization', this.authToken);
@@ -211,8 +230,12 @@ export class AuthService {
     }
   }
 
-  isSignedIn() {
-    return this.user != null;
+  getIsSignedIn(): boolean {
+    return this.isSignedIn;
+  }
+
+  getIsAdmin(): boolean {
+    return this.isAdmin;
   }
 
 }

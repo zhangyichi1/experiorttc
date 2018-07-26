@@ -6,7 +6,6 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const passport = require('passport');
-// const user = require('./app_server/model/user');
 const config = require('./app_server/config/database');
 const routes = require('./app_server/routes/index');
 const server = express();

@@ -46,13 +46,13 @@
         <button class="button-font" mat-button [routerLink]="['/calendar']" fxShow.lt-md="false">Calendar</button>
         <button class="button-font" mat-button [routerLink]="['/about']" fxShow.lt-md="false">About</button>
         <span class="fill-remaining-space"></span>
-        <button class="button-font" mat-button [routerLink]="['/authentication/signin']" *ngIf="!isSignedIn" fxShow.lt-md="false">Sign In</button>
-        <button class="button-font" mat-button [routerLink]="['/authentication/signup']" *ngIf="!isSignedIn" fxShow.lt-md="false">Sign Up</button>
-        <button class="button-font" mat-button [matMenuTriggerFor]="menu" *ngIf="isSignedIn" fxShow.lt-md="false">{{ user.username }}<mat-icon fontSet="fa" fontIcon="fa-caret-down"></mat-icon></button>
+        <button class="button-font" mat-button [routerLink]="['/authentication/signin']" *ngIf="!authService.getIsSignedIn()" fxShow.lt-md="false">Sign In</button>
+        <button class="button-font" mat-button [routerLink]="['/authentication/signup']" *ngIf="!authService.getIsSignedIn()" fxShow.lt-md="false">Sign Up</button>
+        <button class="button-font" mat-button [matMenuTriggerFor]="menu" *ngIf="authService.getIsSignedIn()" fxShow.lt-md="false">{{ authService.getCurrentUser().username }}<mat-icon fontSet="fa" fontIcon="fa-caret-down"></mat-icon></button>
         <mat-menu #menu="matMenu">
           <button class="button-font" mat-menu-item (click)="signOut()">Sign Out</button>
           <button class="button-font" mat-menu-item [routerLink]="['/profile']">Profile</button>
-          <button class="button-font" mat-menu-item [routerLink]="['/manageuser']">Manage</button>
+          <button class="button-font" mat-menu-item [routerLink]="['/admin/manageuser']" *ngIf="authService.getIsAdmin()">Manage</button>
         </mat-menu>
 
         <!-- <button mat-button fxShow="false" fxShow.lt-md="true" class="bars">
@@ -64,15 +64,15 @@
           </span>
         </button>
         <mat-menu #menu2="matMenu">
-          <button class="button-font" mat-menu-item [routerLink]="['/profile']" *ngIf="isSignedIn">{{ user.username }}</button>
+          <button class="button-font" mat-menu-item [routerLink]="['/profile']" *ngIf="authService.getIsSignedIn()">{{ authService.getCurrentUser().username }}</button>
           <button class="button-font" mat-menu-item [routerLink]="['/home']">Home</button>
           <button class="button-font" mat-menu-item [routerLink]="['/calendar']">Calendar</button>
           <button class="button-font" mat-menu-item [routerLink]="['/about']">About</button>
-          <button class="button-font" mat-menu-item [routerLink]="['/authentication/signin']" *ngIf="!isSignedIn">Sign In</button>
-          <button class="button-font" mat-menu-item [routerLink]="['/authentication/signup']" *ngIf="!isSignedIn">Sign Up</button>
-          <button class="button-font" mat-menu-item [routerLink]="['/profile']" *ngIf="isSignedIn">Profile</button>
-          <button class="button-font" mat-menu-item [routerLink]="['/manageuser']" *ngIf="isSignedIn">Manage</button>
-          <button class="button-font" mat-menu-item (click)="signOut()" *ngIf="isSignedIn">Sign Out</button>
+          <button class="button-font" mat-menu-item [routerLink]="['/authentication/signin']" *ngIf="!authService.getIsSignedIn()">Sign In</button>
+          <button class="button-font" mat-menu-item [routerLink]="['/authentication/signup']" *ngIf="!authService.getIsSignedIn()">Sign Up</button>
+          <button class="button-font" mat-menu-item [routerLink]="['/profile']" *ngIf="authService.getIsSignedIn()">Profile</button>
+          <button class="button-font" mat-menu-item [routerLink]="['/admin/manageuser']" *ngIf="authService.getIsSignedIn() && authService.getIsAdmin()">Manage</button>
+          <button class="button-font" mat-menu-item (click)="signOut()" *ngIf="authService.getIsSignedIn()">Sign Out</button>
         </mat-menu>
     </mat-toolbar-row>
   </mat-toolbar>

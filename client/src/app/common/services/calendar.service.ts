@@ -122,7 +122,7 @@ export class CalendarService {
   }
 
   appendToken() {
-    if(this.authService.isSignedIn()) {
+    if(this.authService.getIsSignedIn()) {
       if(httpOptions.headers.has('Authorization')) {
         httpOptions.headers = httpOptions.headers.delete('Authorization');
         httpOptions.headers = httpOptions.headers.append('Authorization', this.authService.loadToken());

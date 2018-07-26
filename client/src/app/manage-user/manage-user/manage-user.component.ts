@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Data } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../common/services/auth.service';
 import { FlashMessagesService } from 'angular2-flash-messages';
-import { User } from '../models/user.model';
+import { User } from '../../common/models/user.model';
 import { ManageUserConfirmDialogComponent } from './manage-user-confirm-dialog/manage-user-confirm-dialog.component';
 import { MatDialog, MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 

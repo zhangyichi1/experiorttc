@@ -14,53 +14,45 @@ import { User } from '../models/user.model';
 export class HeaderComponent implements OnInit {
 
   isNavbarCollapsed: boolean;
-  isSignedIn: boolean;
-  user: User;
+  // isSignedIn: boolean = false;
+  // isAdmin: boolean = false;
+  // user: User;
 
-  constructor(private authService: AuthService,
+  constructor(public authService: AuthService,
               private eventService: EventService,
               private flashMessages: FlashMessagesService,
               private router: Router) { }
 
   ngOnInit() {
     this.isNavbarCollapsed = true;
-    //if token is not expired get the user from localStorage
-    // if(this.authService.checkTokenExp()) {
-    //   this.user = JSON.parse(this.authService.loadUser());
+
+    // this.user = this.authService.getCurrentUser();
+    // console.log("in header ngOnInit user is: ", this.user);
+    // this.isSignedIn = this.user == null ? false : true;
+    // if(this.isSignedIn) {
+    //   this.isAdmin = this.user.roles.indexOf('admin') == -1 ? false : true;
+    // }else {
+    //   this.isAdmin = false;
+    // }
+    //
+    // this.eventService.signInEvent.subscribe((user) => {
     //   this.isSignedIn = true;
-    // }
-    // else {
+    //   this.user = user;
+    //   this.isAdmin = this.user.roles.indexOf('admin') == -1 ? false : true;
+    // })
+    //
+    // this.eventService.signInExpireEvent.subscribe(() => {
     //   this.isSignedIn = false;
-    // }
-
-    this.user = this.authService.getCurrentUser();
-    console.log("in header ngOnInit user is: ", this.user);
-    this.isSignedIn = this.user == null ? false : true;
-
-    this.eventService.signInEvent.subscribe((user) => {
-      this.isSignedIn = true;
-      this.user = user;
-    })
-
-    this.eventService.signInExpireEvent.subscribe(() => {
-      this.isSignedIn = false;
-      this.user = null;
-    })
+    //   this.user = null;
+    //   this.isAdmin = false;
+    // })
   }
 
   signOut() {
     this.authService.signOut();
     this.flashMessages.show('You have signed out and redirected to homepage', { cssClass: 'alert-success', timeout: 3000 });
-    setTimeout(() => {
-      this.isSignedIn = false;
-      this.router.navigate(['/home']);
-    }, 1000);
-  }
-
-  onBlur() {
-    setTimeout(() => {
-      this.isNavbarCollapsed = true;
-      console.log('hahaha');
-    }, 150);
+      // this.isSignedIn = false;
+      // this.isAdmin = false;
+    this.router.navigate(['/home']);
   }
 }
